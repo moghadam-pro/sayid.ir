@@ -1,4 +1,4 @@
-# Sayid Moghadam - [Personal site](http://sayid.ir)
+### Sayid Moghadam - [Personal site](http://sayid.ir)
 
 iWant Strat working with Github and sync my project. its just an start
 This is Source of My Personal site.
@@ -16,4 +16,4 @@ This is Source of My Personal site.
 
  This site is NOT supported by IE
 
-# Special tanks for all of my knowledge from Ali.MD
+#### Special tanks for all of my knowledge from Ali.MD
