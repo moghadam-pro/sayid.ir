@@ -1,0 +1,65 @@
+/* Stylesheet for Sayid.ir - Designed by Sayid Moghadam - i@sayid.ir */
+body{font-family:Verdana;font-size:12px;position:relative;overflow:hidden;}
+select,option,input{font-family:Verdana;font-size:12px;}
+a{text-decoration:none;}
+.clear{clear:both;width:100%;height:2px;}
+.pfont{font-family:tahoma !important;}
+.posRel{position:relative;}
+@font-face {
+	font-family: "Lato";
+	font-style: normal;
+	font-weight: 300;
+	src: local("Lato Light"), local("Lato-Light"), url("http://themes.googleusercontent.com/static/fonts/lato/v6/KT3KS9Aol4WfR6Vas8kNcg.woff") format("woff");
+}
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+#preloader{
+	-webkit-transition: opacity 1s ease-in;
+	-moz-transition: opacity 1s ease-in;
+	-o-transition: opacity 1s ease-in;
+	position: fixed;
+	top: 0;bottom: 0;left: 0;right: 0;
+	z-index: 1000;
+	opacity: 1;
+	background: #1C1C1C;
+}
+.centerScreen{
+	-webkit-transition: opacity 1s ease-in;
+	-moz-transition: opacity 1s ease-in;
+	-o-transition: opacity 1s ease-in;
+	width:360px;
+	height:80;	
+	margin:100px auto 0;
+	position:relative;
+	display:none;
+}
+#loading{width:80px;height:80px;background-image:url(../img/progress.gif);position:absolute;top:0;right:0;}
+#pleasWait{width:280px;height:80px;background-image:url(../img/wait.jpg);position:absolute;top:0;right:80px;}
+#preloader.fade_out{opacity:0;}
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+.numTimerCh{
+	display:inline-block;
+	font-size:90px;
+	color:#0E900B;
+	font-family:"Lato";
+	text-shadow:0 0 10px #999;
+}
+.container{margin-top:200px;text-align:center;}
+#IEdetector{
+	background-color:#fff;
+}
+#naSeza{
+	width:444px;
+	height:233px;
+	margin:0 auto;
+	background-image:url(../img/extroller.jpg);
+}
+.naSezaTit{
+	font-family:tahoma;
+	font-size:12px;
+	color:#666666;
+	text-align:center;
+	margin:50px 0 20px;
+	width:100%;
+	padding:10px;
+	background-color:#E2E2E2;
+}
