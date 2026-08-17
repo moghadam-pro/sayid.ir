@@ -31,6 +31,7 @@ The rebuild is being defined from the product and content architecture first, be
 - [Homepage Low-Fidelity Wireframe — v1](docs/08-homepage-low-fi-wireframe.md)
 - [Visual System v1](docs/09-visual-system-v1.md)
 - [Design Tokens & Responsive Specification](docs/10-design-tokens-responsive-spec.md)
+- [WordPress / Elementor Implementation Architecture](docs/11-implementation-architecture.md)
 
 ## Current rebuild principles
 
@@ -71,9 +72,9 @@ A different stack should only be introduced later if real product or maintenance
 
 ## Status
 
-**Visual system and responsive contract defined**
+**Visual system, responsive contract and implementation architecture defined**
 
-The homepage narrative, low-fidelity architecture, theme behavior, visual tokens, interaction principles and responsive regimes are now documented. The next phase is implementation architecture and Hero audit, followed by building the first reusable frontend primitives.
+The homepage narrative, low-fidelity architecture, theme behavior, design tokens, interaction principles, responsive regimes and WordPress/Elementor responsibility split are now documented. The next implementation step is to build the shared frontend foundation and then apply it to the existing Hero before moving through the homepage sections.
 
 ---
 
