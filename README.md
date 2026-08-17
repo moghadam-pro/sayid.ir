@@ -26,6 +26,9 @@ The rebuild is being defined from the product and content architecture first, be
 - [Homepage Architecture & Interaction Model](docs/03-homepage-architecture.md)
 - [Hero Entry, Scroll Cue & Deferred Homepage Mount](docs/04-hero-scroll-entry.md)
 - [Selected Work & Lab](docs/05-selected-work-lab.md)
+- [Signature Dark Section — Design × Code × AI](docs/06-signature-dark-section.md)
+- [Editorial Homepage Sections — Notes, Article, Connect & Footer](docs/07-editorial-and-connect.md)
+- [Homepage Low-Fidelity Wireframe — v1](docs/08-homepage-low-fi-wireframe.md)
 
 ## Current rebuild principles
 
@@ -59,9 +62,9 @@ A different stack should only be introduced later if real product or maintenance
 
 ## Status
 
-**Planning / Product Definition**
+**Homepage definition / low-fidelity architecture**
 
-Next steps include information architecture refinement, homepage architecture, navigation, content schemas, and the visual/design-system direction.
+The first complete homepage narrative and low-fidelity layout are now documented. The next phase is Visual System v1, followed by Hero audit and high-fidelity homepage design.
 
 ---
 
