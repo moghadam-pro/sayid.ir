@@ -25,6 +25,7 @@ The rebuild is being defined from the product and content architecture first, be
 - [Content Model & Living Site Principles](docs/02-content-model.md)
 - [Homepage Architecture & Interaction Model](docs/03-homepage-architecture.md)
 - [Hero Entry, Scroll Cue & Deferred Homepage Mount](docs/04-hero-scroll-entry.md)
+- [Selected Work & Lab](docs/05-selected-work-lab.md)
 
 ## Current rebuild principles
 
