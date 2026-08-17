@@ -29,6 +29,8 @@ The rebuild is being defined from the product and content architecture first, be
 - [Signature Dark Section — Design × Code × AI](docs/06-signature-dark-section.md)
 - [Editorial Homepage Sections — Notes, Article, Connect & Footer](docs/07-editorial-and-connect.md)
 - [Homepage Low-Fidelity Wireframe — v1](docs/08-homepage-low-fi-wireframe.md)
+- [Visual System v1](docs/09-visual-system-v1.md)
+- [Design Tokens & Responsive Specification](docs/10-design-tokens-responsive-spec.md)
 
 ## Current rebuild principles
 
@@ -39,6 +41,11 @@ The rebuild is being defined from the product and content architecture first, be
 - Use structured content and relationships rather than manually maintained homepage sections.
 - Let new content update relevant parts of the site automatically.
 - Keep `sayid.ir` and `moghadam.pro` complementary rather than duplicated.
+- Keep the interface Persian-first and RTL-first.
+- Use Estedad consistently across the site.
+- Preserve the existing yellow and purple brand accents.
+- Follow system light/dark preference by default, while allowing a persistent manual override.
+- Treat responsiveness as a fluid system across mobile, compact, standard desktop and large-display regimes.
 
 ## Initial implementation direction
 
@@ -58,13 +65,15 @@ Dynamic Queries / Loops
 Living Homepage + Archives + Related Content
 ```
 
+A custom frontend/plugin layer owns shared tokens, theme behavior, deferred homepage mounting and interaction logic so critical behavior is not scattered across Elementor HTML widgets.
+
 A different stack should only be introduced later if real product or maintenance needs justify the migration cost.
 
 ## Status
 
-**Homepage definition / low-fidelity architecture**
+**Visual system and responsive contract defined**
 
-The first complete homepage narrative and low-fidelity layout are now documented. The next phase is Visual System v1, followed by Hero audit and high-fidelity homepage design.
+The homepage narrative, low-fidelity architecture, theme behavior, visual tokens, interaction principles and responsive regimes are now documented. The next phase is implementation architecture and Hero audit, followed by building the first reusable frontend primitives.
 
 ---
 
