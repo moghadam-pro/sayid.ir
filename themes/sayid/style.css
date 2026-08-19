@@ -1,0 +1,19 @@
+/*
+Theme Name:   Sayid
+Theme URI:    https://github.com/moghadam-pro/sayid.ir
+Author:       Sayid Moghadam
+Author URI:   https://moghadam.pro
+Description:  Standalone WordPress theme for sayid.ir v2 — a Persian-first, RTL-first personal space for product design, building, experiments and writing. Ships its own content model (Notes, Articles, Lab, Projects, Now), design system, Hero, and homepage assembly. No Elementor dependency.
+Requires at least: 6.0
+Requires PHP: 7.4
+Version:      1.0.0
+License:      GNU General Public License v2 or later
+License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:  sayid
+Tags:         custom-background, custom-menu, featured-images, rtl-language-support, translation-ready
+*/
+
+/* Actual styles live in assets/css/*.css, enqueued by inc/enqueue.php.
+   This file only needs to exist with the header above for WordPress to
+   recognize the theme; kept otherwise empty to avoid a second source of
+   truth for design tokens. */

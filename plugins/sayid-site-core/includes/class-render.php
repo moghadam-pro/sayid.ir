@@ -163,7 +163,7 @@ class Sayid_Core_Render {
 		$href        = $live_url ? $live_url : ( $repo_url ? $repo_url : get_permalink( $item ) );
 		$external    = ( $href === $live_url || $href === $repo_url );
 		?>
-		<article class="lab-card <?php echo $primary ? 'lab-card--primary' : ''; ?>" data-lab-card tabindex="0">
+		<article class="lab-card <?php echo $primary ? 'lab-card--primary' : ''; ?>" data-lab-card>
 			<span class="lab-card__border" aria-hidden="true"></span>
 			<a class="lab-card__link" href="<?php echo esc_url( $href ); ?>" <?php echo $external ? 'target="_blank" rel="noopener"' : ''; ?>>
 				<div class="lab-card__body">

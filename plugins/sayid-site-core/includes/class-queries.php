@@ -14,6 +14,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Sayid_Core_Queries {
 
 	/**
+	 * A top-level `meta_key` (used to enable `orderby => meta_value_num`)
+	 * silently becomes a required meta_query clause in WP_Query, excluding
+	 * any post that doesn't already have that key set. This named
+	 * EXISTS/NOT EXISTS OR-branch orders by the value when present without
+	 * dropping posts where it's simply unset.
+	 */
+	private static function priority_meta_query_branch() {
+		return array(
+			'relation'        => 'OR',
+			'priority_clause' => array(
+				'key'     => 'sayid_homepage_priority',
+				'compare' => 'EXISTS',
+				'type'    => 'NUMERIC',
+			),
+			array(
+				'key'     => 'sayid_homepage_priority',
+				'compare' => 'NOT EXISTS',
+			),
+		);
+	}
+
+	/**
 	 * Selected Work: Projects with sayid_featured_homepage = 1, ordered by
 	 * sayid_homepage_priority ascending, newest first as a tiebreaker.
 	 */
@@ -22,14 +44,15 @@ class Sayid_Core_Queries {
 			'post_type'      => 'sayid_project',
 			'post_status'    => 'publish',
 			'posts_per_page' => $limit,
-			'meta_key'       => 'sayid_homepage_priority',
-			'orderby'        => array( 'meta_value_num' => 'ASC', 'date' => 'DESC' ),
+			'orderby'        => array( 'priority_clause' => 'ASC', 'date' => 'DESC' ),
 			'meta_query'     => array(
+				'relation' => 'AND',
 				array(
 					'key'     => 'sayid_featured_homepage',
 					'value'   => '1',
 					'compare' => '=',
 				),
+				self::priority_meta_query_branch(),
 			),
 		) );
 	}
@@ -43,14 +66,17 @@ class Sayid_Core_Queries {
 			'post_type'      => 'sayid_lab',
 			'post_status'    => 'publish',
 			'posts_per_page' => $limit,
-			'orderby'        => array( 'meta_value_num' => 'ASC', 'modified' => 'DESC' ),
-			'meta_key'       => 'sayid_homepage_priority',
+			'orderby'        => array( 'priority_clause' => 'ASC', 'modified' => 'DESC' ),
 			'meta_query'     => array(
+				'relation' => 'AND',
+				// A Lab item with no sayid_status meta at all must still
+				// show up, not be silently dropped by the `!=` compare.
 				array(
-					'key'     => 'sayid_status',
-					'value'   => 'archived',
-					'compare' => '!=',
+					'relation' => 'OR',
+					array( 'key' => 'sayid_status', 'value' => 'archived', 'compare' => '!=' ),
+					array( 'key' => 'sayid_status', 'compare' => 'NOT EXISTS' ),
 				),
+				self::priority_meta_query_branch(),
 			),
 		) );
 	}

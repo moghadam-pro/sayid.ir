@@ -1,5 +1,13 @@
 # Sayid Site Core
 
+> **⚠️ Deprecated.** sayid.ir v2 moved to a standalone theme —
+> `themes/sayid/` — with no Elementor dependency. See
+> `docs/17-theme-pivot.md` for why. This plugin is kept in the repository
+> for history/reference only; **deactivate it** when activating the `Sayid`
+> theme, since the theme registers the same content model itself and
+> running both is redundant. Do not install this plugin on a fresh site
+> going forward — use the theme instead.
+
 The plugin that powers `sayid.ir` v2 underneath WordPress + Elementor.
 
 WordPress owns content, taxonomies, settings and relationships. Elementor

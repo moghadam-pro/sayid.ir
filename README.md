@@ -37,6 +37,7 @@ The rebuild is being defined from the product and content architecture first, be
 - [Editorial Workflow](docs/14-editorial-workflow.md)
 - [Deployment & QA](docs/15-deployment-and-qa.md)
 - [Final Implementation Report](docs/16-final-implementation-report.md)
+- [Theme Pivot — from plugin+Elementor to standalone theme](docs/17-theme-pivot.md)
 
 ## Current rebuild principles
 
@@ -77,11 +78,11 @@ A different stack should only be introduced later if real product or maintenance
 
 ## Status
 
-**v2 implemented as an installable plugin, ready for deployment to the live WordPress instance**
+**v2 implemented as a standalone WordPress theme — `themes/sayid/` — no Elementor dependency**
 
-`plugins/sayid-site-core/` is a complete, production-ready plugin: the full content model (Notes, Articles, Lab, Projects, Now), shared taxonomy and relationships, every homepage section (as both shortcodes and native Elementor widgets sharing one implementation), the Hero's responsive contract, the Hero-entry/deferred-homepage-reveal interaction, the Lab pointer interaction, the Design × Code × AI network, coded single/archive templates, and the full theme system.
+The project shipped an initial plugin + Elementor build (`plugins/sayid-site-core/`, now deprecated), deployed it to the live site, and used what that surfaced to pivot to a cleaner architecture: `themes/sayid/` owns the full content model (Notes, Articles, Lab, Projects, Now), the design system, the Hero (rebuilt to match the real, live Hero), homepage assembly, and every template end to end — see [`docs/17-theme-pivot.md`](docs/17-theme-pivot.md) for the full reasoning and what changed.
 
-This build had no live access to `sayid.ir` or its WordPress database (see [`docs/16-final-implementation-report.md`](docs/16-final-implementation-report.md) for the exact constraints and every resulting assumption). Installing the plugin and completing the short, documented Elementor wiring pass in [`docs/13-elementor-build-guide.md`](docs/13-elementor-build-guide.md) is what remains before this goes live — see [`docs/15-deployment-and-qa.md`](docs/15-deployment-and-qa.md) for the deployment steps and full QA checklist.
+Install steps, the field reference, and the QA checklist are in [`themes/sayid/README.md`](themes/sayid/README.md), [`docs/12-plugin-reference.md`](docs/12-plugin-reference.md) (field names are unchanged by the pivot) and [`docs/15-deployment-and-qa.md`](docs/15-deployment-and-qa.md).
 
 ---
 

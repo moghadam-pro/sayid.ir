@@ -1,17 +1,15 @@
 <?php
-/**
- * Lab archive — full Bento grid of every non-archived (and archived, shown
- * quietly) item, reusing the same lab-card markup/pointer interaction as
- * the homepage section.
- */
-Sayid_Core_Assets::enqueue_lab_pointer();
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+sayid_enqueue_lab_pointer();
 get_header();
 ?>
 <main class="section archive-lab" data-sayid-lab>
 	<div class="site-container">
 		<header class="archive__header">
-			<h1 class="archive__title"><?php esc_html_e( 'آزمایشگاه', 'sayid-site-core' ); ?></h1>
-			<p class="archive__lede"><?php esc_html_e( 'بعضی چیزها از یه مسئله واقعی شروع می‌شن، بعضی‌ها فقط از کنجکاوی.', 'sayid-site-core' ); ?></p>
+			<h1 class="archive__title"><?php esc_html_e( 'آزمایشگاه', 'sayid' ); ?></h1>
+			<p class="archive__lede"><?php esc_html_e( 'بعضی چیزها از یه مسئله واقعی شروع می‌شن، بعضی‌ها فقط از کنجکاوی.', 'sayid' ); ?></p>
 		</header>
 
 		<?php if ( have_posts() ) : ?>
@@ -40,7 +38,7 @@ get_header();
 			</div>
 			<div class="archive__pagination"><?php the_posts_pagination(); ?></div>
 		<?php else : ?>
-			<p class="archive__empty"><?php esc_html_e( 'هنوز چیزی منتشر نشده.', 'sayid-site-core' ); ?></p>
+			<p class="archive__empty"><?php esc_html_e( 'هنوز چیزی منتشر نشده.', 'sayid' ); ?></p>
 		<?php endif; ?>
 	</div>
 </main>
