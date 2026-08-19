@@ -33,12 +33,23 @@ class Sayid_Core_Relationships {
 	 * @return array{notes: WP_Post[], articles: WP_Post[], lab: WP_Post[], projects: WP_Post[]}
 	 */
 	public function get_related( $post_id ) {
-		return array(
+		$groups = array(
 			'notes'    => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_notes', true ) ),
 			'articles' => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_articles', true ) ),
 			'lab'      => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_lab', true ) ),
 			'projects' => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_projects', true ) ),
 		);
+
+		// Defense in depth: the admin picker already excludes the current
+		// post, but filter self-references out here too in case a value was
+		// set before that exclusion existed, or postmeta was edited directly.
+		foreach ( $groups as $type => $posts ) {
+			$groups[ $type ] = array_values( array_filter( $posts, function ( $post ) use ( $post_id ) {
+				return (int) $post->ID !== (int) $post_id;
+			} ) );
+		}
+
+		return $groups;
 	}
 
 	/**

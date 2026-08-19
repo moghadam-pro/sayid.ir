@@ -188,13 +188,13 @@ class Sayid_Core_Meta_Fields {
 		foreach ( $fields as $key => $def ) {
 			$value = get_post_meta( $post->ID, $key, true );
 			echo '<tr><th scope="row"><label for="' . esc_attr( $key ) . '">' . esc_html( $this->field_label( $key ) ) . '</label></th><td>';
-			$this->render_field( $key, $def, $value );
+			$this->render_field( $key, $def, $value, $post->ID );
 			echo '</td></tr>';
 		}
 		echo '</tbody></table>';
 	}
 
-	private function render_field( $key, $def, $value ) {
+	private function render_field( $key, $def, $value, $current_post_id = 0 ) {
 		if ( 'sayid_status' === $key ) {
 			echo '<select name="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '">';
 			foreach ( sayid_lab_statuses() as $slug => $label ) {
@@ -212,6 +212,7 @@ class Sayid_Core_Meta_Fields {
 				'posts_per_page' => 200,
 				'orderby'        => 'title',
 				'order'          => 'ASC',
+				'post__not_in'   => array( $current_post_id ), // a post can't relate to itself
 			) );
 			echo '<select multiple size="6" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $key ) . '" style="min-width:320px">';
 			foreach ( $posts as $p ) {
@@ -283,7 +284,12 @@ class Sayid_Core_Meta_Fields {
 					update_post_meta( $post_id, $key, isset( $_POST[ $key ] ) ? wp_kses_post( wp_unslash( $_POST[ $key ] ) ) : '' );
 					break;
 				case 'int_array':
+					// This field is rendered as a single comma-separated text
+					// input, but guard against a non-string submission (e.g.
+					// a crafted sayid_gallery[]=1&sayid_gallery[]=2 request)
+					// rather than letting explode() fatal on PHP 8+.
 					$raw = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : '';
+					$raw = is_array( $raw ) ? implode( ',', $raw ) : (string) $raw;
 					$ids = array_filter( array_map( 'absint', explode( ',', $raw ) ) );
 					update_post_meta( $post_id, $key, array_values( $ids ) );
 					break;

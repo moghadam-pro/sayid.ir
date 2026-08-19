@@ -57,13 +57,30 @@ class Sayid_Core_Assets {
 
 		wp_enqueue_script( 'sayid-theme', SAYID_CORE_URL . 'assets/js/theme.js', array(), $ver, true );
 
-		if ( is_front_page() ) {
-			wp_enqueue_script( 'sayid-homepage-entry', SAYID_CORE_URL . 'assets/js/homepage-entry.js', array(), $ver, true );
-			wp_enqueue_script( 'sayid-lab-pointer', SAYID_CORE_URL . 'assets/js/lab-pointer.js', array(), $ver, true );
-			wp_enqueue_script( 'sayid-signature-network', SAYID_CORE_URL . 'assets/js/signature-network.js', array(), $ver, true );
-		} elseif ( is_singular( 'sayid_lab' ) || is_post_type_archive( 'sayid_lab' ) ) {
-			// Lab pointer interaction also applies to the Lab archive/single templates.
-			wp_enqueue_script( 'sayid-lab-pointer', SAYID_CORE_URL . 'assets/js/lab-pointer.js', array(), $ver, true );
-		}
+		// Interaction scripts are only *registered* here, not enqueued — a
+		// page's actual use of a section is not knowable at this point,
+		// since `wp_enqueue_scripts` fires before shortcodes/Elementor
+		// widgets render (and Elementor widget placement isn't visible in
+		// post_content at all). Each section enqueues its own script only
+		// when it actually renders — see Sayid_Core_Render::lab()/
+		// signature()/deferred_homepage() and the Lab single/archive
+		// templates — so a page never loads a script for an interaction it
+		// doesn't contain, regardless of whether the section is reached via
+		// the homepage, a standalone shortcode, or an Elementor widget.
+		wp_register_script( 'sayid-homepage-entry', SAYID_CORE_URL . 'assets/js/homepage-entry.js', array(), $ver, true );
+		wp_register_script( 'sayid-lab-pointer', SAYID_CORE_URL . 'assets/js/lab-pointer.js', array(), $ver, true );
+		wp_register_script( 'sayid-signature-network', SAYID_CORE_URL . 'assets/js/signature-network.js', array(), $ver, true );
+	}
+
+	public static function enqueue_homepage_entry() {
+		wp_enqueue_script( 'sayid-homepage-entry' );
+	}
+
+	public static function enqueue_lab_pointer() {
+		wp_enqueue_script( 'sayid-lab-pointer' );
+	}
+
+	public static function enqueue_signature_network() {
+		wp_enqueue_script( 'sayid-signature-network' );
 	}
 }

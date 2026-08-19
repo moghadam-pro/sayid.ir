@@ -134,6 +134,7 @@ class Sayid_Core_Render {
 		if ( empty( $items ) ) {
 			return '';
 		}
+		Sayid_Core_Assets::enqueue_lab_pointer();
 		ob_start();
 		?>
 		<section class="section section--lab" id="lab" data-sayid-lab>
@@ -181,6 +182,7 @@ class Sayid_Core_Render {
 
 	/** ---------- 04 · Signature: Design × Code × AI ---------- */
 	public static function signature() {
+		Sayid_Core_Assets::enqueue_signature_network();
 		$nodes = array(
 			'design'      => array( 'label' => 'طراحی محصول', 'x' => 30, 'y' => 26 ),
 			'systems'     => array( 'label' => 'سیستم‌ها',     'x' => 62, 'y' => 18 ),
@@ -414,6 +416,7 @@ class Sayid_Core_Render {
 	 * decision recorded as a deviation from the brief's literal snippet.
 	 */
 	public static function deferred_homepage() {
+		Sayid_Core_Assets::enqueue_homepage_entry();
 		$sections = implode(
 			'',
 			array_filter( array(

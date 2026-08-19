@@ -4,6 +4,7 @@
  * quietly) item, reusing the same lab-card markup/pointer interaction as
  * the homepage section.
  */
+Sayid_Core_Assets::enqueue_lab_pointer();
 get_header();
 ?>
 <main class="section archive-lab" data-sayid-lab>

@@ -94,10 +94,14 @@ For each viewport, on the homepage:
 - [ ] Homepage initial payload does not eagerly load below-fold images —
       confirm `loading="lazy"` is present on cover images rendered via
       `sayid_cover_html()`.
-- [ ] `sayid-lab-pointer` and `sayid-signature-network` scripts are only
-      requested on the front page (and Lab archive/single for the pointer
-      script) — check the Network tab on a non-homepage page and confirm
-      neither loads.
+- [ ] `sayid-lab-pointer` and `sayid-signature-network` are registered
+      site-wide but only *enqueued* by the section that actually renders
+      them (`Sayid_Core_Render::lab()`/`signature()`/`deferred_homepage()`,
+      and the Lab archive template) — check the Network tab on a page with
+      neither section (e.g. Contact) and confirm neither script loads, then
+      confirm both do load on a scratch page containing just
+      `[sayid_lab]` or `[sayid_signature]`, without needing to be the
+      homepage.
 - [ ] No layout shift when the deferred homepage content reveals (the
       `hidden`→visible transition is opacity-only, not a height/size
       change, so there should be none).
