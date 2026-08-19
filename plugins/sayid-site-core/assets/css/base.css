@@ -34,7 +34,7 @@ html {
 
 body {
   margin: 0;
-  font-family: var(--font-family);
+  font-family: var(--font-family) !important;
   font-size: var(--text-body);
   line-height: var(--leading-body);
   font-weight: 400;
@@ -61,6 +61,21 @@ h1, h2, h3, h4 {
   font-weight: 600;
   line-height: var(--leading-heading);
   margin: 0;
+}
+
+/**
+ * Themes with a "Global Fonts" feature (Hello Elementor + Elementor Pro
+ * among them) often set font-family directly on heading/paragraph/button
+ * tags, not just `body` — inheritance from `body` loses to any explicit
+ * rule on the element itself, `!important` or not. Since this plugin's
+ * markup lives inside these two containers, force Estedad within them
+ * specifically rather than fighting the whole theme's typography globally.
+ */
+.home-hero,
+.home-hero *,
+#homepage-deferred-root,
+#homepage-deferred-root * {
+  font-family: var(--font-family) !important;
 }
 
 p {
