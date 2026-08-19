@@ -186,6 +186,17 @@ Avoid inline scripts inside Elementor HTML widgets whenever the behavior is reus
 
 ## Homepage deferred-content architecture
 
+> **Implementation note (v1 build):** the `<template>`-based approach
+> sketched below was superseded during implementation by a `hidden`
+> attribute on a normal, always-present, server-rendered root — the
+> `<template>` tag's content is inert and never reaches crawlers or no-JS
+> visitors, which conflicts with this same document's SEO note and with
+> brief §16's own "no-JS users get a normal scrollable page" requirement.
+> See `docs/16-final-implementation-report.md` § "Deviations from the
+> brief" for the full reasoning, and `class-render.php`/`homepage-entry.js`
+> for the shipped implementation. This section is kept as the original
+> planning record.
+
 The preferred architecture is progressive and resilient.
 
 Initial HTML contains:

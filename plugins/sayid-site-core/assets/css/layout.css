@@ -1,0 +1,55 @@
+/**
+ * layout.css — reusable layout primitives shared by every section:
+ * .site-container, .section, .layout-grid, .editorial-width, .full-bleed.
+ *
+ * Four responsive regimes (brief §30), fluid between them via clamp()/min()
+ * rather than one-off breakpoints per component.
+ */
+
+.site-container {
+  width: min(calc(100% - (2 * var(--gutter))), var(--content-max));
+  margin-inline: auto;
+}
+
+.editorial-width {
+  max-width: var(--editorial-max);
+}
+
+.full-bleed {
+  width: 100vw;
+  margin-inline-start: calc(50% - 50vw);
+}
+
+.section {
+  padding-block: clamp(56px, 7vw, 120px);
+}
+
+.section--now { padding-block: clamp(48px, 6vw, 96px); }
+.section--notes { padding-block: clamp(48px, 6vw, 96px); }
+.section--connect { padding-block: clamp(80px, 10vw, 160px); }
+.section--signature { padding-block: clamp(96px, 11vw, 176px); }
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 4vw, 24px);
+}
+
+@media (min-width: 768px) {
+  .layout-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: clamp(16px, 2.4vw, 24px);
+  }
+}
+
+@media (min-width: 1200px) {
+  .layout-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(24px, 1.8vw, 32px);
+  }
+}
+
+/* Large-display rule (brief §30): keep the 12-column logic and content cap,
+   grow whitespace, never proportionally zoom the UI. --content-max already
+   handles this because .site-container centers within the viewport and lets
+   margin-inline:auto absorb the extra width above 1921px. */

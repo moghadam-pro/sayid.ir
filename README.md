@@ -32,6 +32,11 @@ The rebuild is being defined from the product and content architecture first, be
 - [Visual System v1](docs/09-visual-system-v1.md)
 - [Design Tokens & Responsive Specification](docs/10-design-tokens-responsive-spec.md)
 - [WordPress / Elementor Implementation Architecture](docs/11-implementation-architecture.md)
+- [Plugin Reference — field-by-field](docs/12-plugin-reference.md)
+- [Elementor Build Guide](docs/13-elementor-build-guide.md)
+- [Editorial Workflow](docs/14-editorial-workflow.md)
+- [Deployment & QA](docs/15-deployment-and-qa.md)
+- [Final Implementation Report](docs/16-final-implementation-report.md)
 
 ## Current rebuild principles
 
@@ -72,9 +77,11 @@ A different stack should only be introduced later if real product or maintenance
 
 ## Status
 
-**Visual system, responsive contract and implementation architecture defined**
+**v2 implemented as an installable plugin, ready for deployment to the live WordPress instance**
 
-The homepage narrative, low-fidelity architecture, theme behavior, design tokens, interaction principles, responsive regimes and WordPress/Elementor responsibility split are now documented. The next implementation step is to build the shared frontend foundation and then apply it to the existing Hero before moving through the homepage sections.
+`plugins/sayid-site-core/` is a complete, production-ready plugin: the full content model (Notes, Articles, Lab, Projects, Now), shared taxonomy and relationships, every homepage section (as both shortcodes and native Elementor widgets sharing one implementation), the Hero's responsive contract, the Hero-entry/deferred-homepage-reveal interaction, the Lab pointer interaction, the Design × Code × AI network, coded single/archive templates, and the full theme system.
+
+This build had no live access to `sayid.ir` or its WordPress database (see [`docs/16-final-implementation-report.md`](docs/16-final-implementation-report.md) for the exact constraints and every resulting assumption). Installing the plugin and completing the short, documented Elementor wiring pass in [`docs/13-elementor-build-guide.md`](docs/13-elementor-build-guide.md) is what remains before this goes live — see [`docs/15-deployment-and-qa.md`](docs/15-deployment-and-qa.md) for the deployment steps and full QA checklist.
 
 ---
 
