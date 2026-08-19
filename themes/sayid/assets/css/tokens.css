@@ -8,9 +8,12 @@
  */
 
 :root {
-  /* ---------- Brand ---------- */
-  --color-yellow: #ffbf01;
-  --color-purple: #6050a8;
+  /* ---------- Brand ----------
+     Confirmed live values (2026-08-19): primary/secondary/text updated
+     from the original brief's placeholder brand colors to the site's
+     actual global colors. */
+  --color-yellow: #ffba20;
+  --color-purple: #5851c0;
   --brand-gradient: linear-gradient(120deg, var(--color-yellow), var(--color-purple));
 
   /* ---------- Layout ---------- */
@@ -59,13 +62,12 @@
   --z-header: 100;
   --z-scroll-cue: 20;
   --z-theme-switch: 20;
-  --z-signature-node: 5;
 
   /* ---------- Light theme (default) ---------- */
   --color-bg: #f7f8fb;
   --color-surface: #ffffff;
   --color-surface-subtle: #f1f3f7;
-  --color-text: #13151a;
+  --color-text: #262523;
   --color-text-muted: #667085;
   --color-border: rgba(19, 21, 26, .10);
   --color-border-strong: rgba(19, 21, 26, .18);
@@ -112,7 +114,7 @@
   --color-bg: #f7f8fb;
   --color-surface: #ffffff;
   --color-surface-subtle: #f1f3f7;
-  --color-text: #13151a;
+  --color-text: #262523;
   --color-text-muted: #667085;
   --color-border: rgba(19, 21, 26, .10);
   --color-border-strong: rgba(19, 21, 26, .18);

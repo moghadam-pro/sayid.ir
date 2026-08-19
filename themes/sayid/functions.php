@@ -29,5 +29,6 @@ require_once SAYID_THEME_DIR . '/inc/queries.php';
 require_once SAYID_THEME_DIR . '/inc/render.php';
 require_once SAYID_THEME_DIR . '/inc/admin-columns.php';
 require_once SAYID_THEME_DIR . '/inc/template-tags.php';
+require_once SAYID_THEME_DIR . '/inc/icons.php';
 require_once SAYID_THEME_DIR . '/inc/customizer.php';
 require_once SAYID_THEME_DIR . '/inc/contact-form.php';

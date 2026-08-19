@@ -77,25 +77,31 @@ function sayid_query_latest_notes( $limit = 5 ) {
 	) );
 }
 
-function sayid_query_featured_article() {
+/**
+ * Homepage Articles: newest first. A manually featured article
+ * (sayid_featured_homepage = 1) is pinned first when one exists, so the
+ * "featured" concept still means something even though the section is now
+ * a compact multi-post grid rather than one large single card.
+ */
+function sayid_query_articles( $limit = 3 ) {
 	$featured = get_posts( array(
 		'post_type'      => 'post',
 		'post_status'    => 'publish',
-		'posts_per_page' => 1,
+		'posts_per_page' => $limit,
 		'meta_query'     => array(
 			array( 'key' => 'sayid_featured_homepage', 'value' => '1', 'compare' => '=' ),
 		),
 	) );
-	if ( ! empty( $featured ) ) {
-		return $featured[0];
-	}
 
-	$latest = get_posts( array(
+	$remaining = max( 0, $limit - count( $featured ) );
+	$rest      = $remaining ? get_posts( array(
 		'post_type'      => 'post',
 		'post_status'    => 'publish',
-		'posts_per_page' => 1,
+		'posts_per_page' => $remaining,
+		'post__not_in'   => wp_list_pluck( $featured, 'ID' ),
 		'orderby'        => 'date',
 		'order'          => 'DESC',
-	) );
-	return ! empty( $latest ) ? $latest[0] : null;
+	) ) : array();
+
+	return array_slice( array_merge( $featured, $rest ), 0, $limit );
 }

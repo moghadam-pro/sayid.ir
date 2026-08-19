@@ -131,3 +131,22 @@ function sayid_get_visitor_ip() {
 	}
 	return '';
 }
+
+/**
+ * Builds a `tel:` href from a human-entered phone number. A Persian
+ * keyboard produces Persian (۰۱۲…) or Arabic-Indic (٠١٢…) digits, which
+ * dialers can't parse in a tel: URI, so those are mapped to ASCII and
+ * everything except digits and a leading + is dropped. The number is still
+ * *displayed* exactly as entered — only the href is normalized.
+ */
+function sayid_tel_href( $phone ) {
+	$digits = array(
+		'۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4',
+		'۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
+		'٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4',
+		'٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9',
+	);
+	$normalized = strtr( trim( $phone ), $digits );
+	$plus       = ( 0 === strpos( $normalized, '+' ) ) ? '+' : '';
+	return $plus . preg_replace( '/\D+/', '', $normalized );
+}

@@ -1,7 +1,7 @@
 /**
  * interactions.css — the CSS half of JS-driven interactions: Lab pointer
- * border reveal, Signature node/edge states, deferred-mount transition
- * states. The JS layer (lab-pointer.js, signature-network.js,
+ * border reveal, Signature Venn ambient state, deferred-mount transition
+ * states. The JS layer (lab-pointer.js, signature-venn.js,
  * homepage-entry.js) only ever toggles classes and CSS custom properties;
  * every visual effect itself is expressed here so it stays inspectable and
  * themeable independent of behavior.
@@ -58,46 +58,24 @@
 }
 
 /* ======================================================================
-   Signature network — node & edge focus states (brief §20 / docs/06 §5)
+   Signature Venn — idle ambient state (brief §36)
+   Barely-there breathing on the three base circles so the diagram reads as
+   alive before any chip is activated, without competing with the text.
+   Overlap-zone active/hover states are static (no animation) — defined
+   alongside their base styles in components.css.
    ====================================================================== */
 
-.signature-node.is-active {
-  color: var(--signature-text);
-  border-color: var(--signature-line-active);
-  background: var(--signature-surface);
-}
-
-.signature-node.is-connected {
-  color: var(--signature-text);
-  border-color: rgba(255, 191, 1, .5);
-}
-
-.signature-node.is-dim {
-  opacity: .5;
-}
-
-.signature-network__edge.is-active {
-  stroke: var(--signature-line-active);
-  stroke-width: .5;
-}
-
-.signature-network__edge.is-dim {
-  opacity: .35;
-}
-
-/* Idle ambient state before any interaction — barely-there breathing so the
-   network reads as alive without competing with the text (brief §36). */
 @media (prefers-reduced-motion: no-preference) {
-  .signature-network:not(:hover):not(:focus-within) .signature-network__edge {
-    animation: sayid-signature-breathe 6s ease-in-out infinite;
+  .signature-venn:not(:hover):not(:focus-within) .signature-venn__circle {
+    animation: sayid-signature-breathe 7s ease-in-out infinite;
   }
-  .signature-network:not(:hover):not(:focus-within) .signature-network__edge:nth-child(3n+1) { animation-delay: -1s; }
-  .signature-network:not(:hover):not(:focus-within) .signature-network__edge:nth-child(3n+2) { animation-delay: -3s; }
+  .signature-venn:not(:hover):not(:focus-within) .signature-venn__circle--code { animation-delay: -2s; }
+  .signature-venn:not(:hover):not(:focus-within) .signature-venn__circle--ai { animation-delay: -4.5s; }
 }
 
 @keyframes sayid-signature-breathe {
-  0%, 100% { opacity: .5; }
-  50% { opacity: .8; }
+  0%, 100% { opacity: .7; }
+  50% { opacity: 1; }
 }
 
 /* ======================================================================
@@ -134,7 +112,7 @@ html[data-home-entry="transitioning"] .scroll-cue {
   .lab-card.is-pointer-active .lab-card__title {
     transform: none;
   }
-  .signature-network__edge {
+  .signature-venn__circle {
     animation: none !important;
   }
 }

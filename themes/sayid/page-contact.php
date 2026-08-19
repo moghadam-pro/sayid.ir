@@ -23,6 +23,21 @@ while ( have_posts() ) : the_post();
 				</p>
 			</header>
 
+			<ul class="contact-channels">
+				<?php $phone = sayid_contact_phone(); ?>
+				<?php if ( $phone && sayid_tel_href( $phone ) ) : ?>
+					<li>
+						<?php esc_html_e( 'می‌تونی زنگ بزنی:', 'sayid' ); ?>
+						<a href="tel:<?php echo esc_attr( sayid_tel_href( $phone ) ); ?>" dir="ltr"><?php echo esc_html( $phone ); ?></a>
+					</li>
+				<?php endif; ?>
+				<li>
+					<?php esc_html_e( 'می‌تونی ایمیل بزنی:', 'sayid' ); ?>
+					<a href="mailto:i@moghadam.pro">i@moghadam.pro</a>
+				</li>
+				<li><?php esc_html_e( 'یا همین‌جا یه چیزی بنویس تا خودم باهات ارتباط بگیرم:', 'sayid' ); ?></li>
+			</ul>
+
 			<?php if ( have_posts() && get_the_content() ) : ?>
 				<div class="prose"><?php the_content(); ?></div>
 			<?php endif; ?>

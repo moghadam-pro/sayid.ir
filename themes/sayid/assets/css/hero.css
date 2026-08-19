@@ -11,6 +11,7 @@
 .home-hero {
   --hero-bg: #eef1f4;
   --hero-marquee-color: rgba(19, 21, 26, .05);
+  --hero-marquee-stroke: rgba(19, 21, 26, .16);
 
   position: relative;
   display: flex;
@@ -27,12 +28,14 @@
   :root:not([data-theme="light"]) .home-hero {
     --hero-bg: #101218;
     --hero-marquee-color: rgba(255, 255, 255, .04);
+    --hero-marquee-stroke: rgba(255, 255, 255, .14);
   }
 }
 
 :root[data-theme="dark"] .home-hero {
   --hero-bg: #101218;
   --hero-marquee-color: rgba(255, 255, 255, .04);
+  --hero-marquee-stroke: rgba(255, 255, 255, .14);
 }
 
 /* ---------- Background marquee ---------- */
@@ -67,6 +70,14 @@
 
 .home-hero__marquee-row--b {
   animation: sayid-marquee-ltr 110s linear infinite;
+}
+
+/* One of the two lines is hollow/outline text — characters have a stroke,
+   no fill — rather than both being identical solid fills. */
+.home-hero__marquee-row--outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--hero-marquee-stroke);
+  text-stroke: 1.5px var(--hero-marquee-stroke);
 }
 
 @keyframes sayid-marquee-rtl {
@@ -208,6 +219,12 @@
   font-weight: 600;
 }
 
+.home-hero__role--outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-text);
+  text-stroke: 1px var(--color-text);
+}
+
 .home-hero__lede {
   margin-top: var(--space-4);
   max-width: 34ch;
@@ -221,6 +238,39 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-3);
+}
+
+/* ---------- Rotating headline chip ----------
+   Not a button — nothing to click. Styled like highlighted/selected text
+   (a filled chip) because it visually *is* the "selected" phrase among a
+   rotating set, per the confirmed design intent. */
+
+.home-hero__rotator {
+  overflow: hidden;
+  max-height: 3.2em; /* pre-JS fallback; hero-rotator.js sets the exact px height */
+  border-radius: var(--radius-sm);
+  background: #1b1d29;
+}
+
+.home-hero__rotator-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 480ms var(--ease-out);
+}
+
+.home-hero__rotator-track > li {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: var(--space-3) var(--space-8);
+  color: #fff;
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__rotator-track {
+    transition: none;
+  }
 }
 
 .home-hero__ip {

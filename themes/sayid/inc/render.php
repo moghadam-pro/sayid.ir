@@ -177,30 +177,25 @@ function sayid_render_lab_card( $item, $primary = false ) {
 
 /** ---------- Signature: Design × Code × AI ---------- */
 function sayid_render_signature() {
-	sayid_enqueue_signature_network();
+	sayid_enqueue_signature_venn();
 
-	$nodes = array(
-		'design'      => array( 'label' => 'طراحی محصول', 'x' => 30, 'y' => 26 ),
-		'systems'     => array( 'label' => 'سیستم‌ها',     'x' => 62, 'y' => 18 ),
-		'research'    => array( 'label' => 'تحقیق',        'x' => 14, 'y' => 52 ),
-		'code'        => array( 'label' => 'کد',           'x' => 80, 'y' => 48 ),
-		'ai'          => array( 'label' => 'هوش مصنوعی',   'x' => 46, 'y' => 68 ),
-		'prototyping' => array( 'label' => 'نمونه‌سازی',   'x' => 10, 'y' => 22 ),
-		'building'    => array( 'label' => 'ساختن',        'x' => 62, 'y' => 84 ),
-		'writing'     => array( 'label' => 'نوشتن',        'x' => 24, 'y' => 86 ),
+	$default_message = __( 'کارهای جالب معمولاً درست جایی اتفاق می‌افتن که مرز بین چند مهارت محو می‌شه.', 'sayid' );
+
+	// Three discipline circles + every zone a visitor can activate: the
+	// three pairwise overlaps and the center where all three meet. Each
+	// zone has its own real Persian sentence — no zone is decorative-only.
+	$zones = array(
+		'design-code' => 'وقتی متریال ساخت رو بشناسی، تصمیم‌های طراحی هم عوض می‌شن.',
+		'design-ai'   => 'نمونه‌سازی سریع با کمک هوش مصنوعی، تصمیم‌های طراحی رو زودتر محک می‌زنه.',
+		'code-ai'     => 'کد نوشتن با کمک هوش مصنوعی، مسیر رسیدن به نسخه‌ی اول رو کوتاه‌تر می‌کنه.',
+		'triple'      => 'جایی که هر سه همدیگه رو قطع می‌کنن، دیگه لازم نیست ایده رو تحویل کسی بدی تا ساخته بشه؛ خودت از فکر تا نسخه‌ی کارکرده می‌بریش.',
 	);
 
-	$edges = array(
-		array( 'design', 'code', 'وقتی متریال ساخت رو بشناسی، تصمیم‌های طراحی هم عوض می‌شن.' ),
-		array( 'design', 'systems', 'یه رابط خوب فقط یه صفحه‌ی خوب نیست؛ باید در مقیاس بزرگ هم منسجم بمونه.' ),
-		array( 'design', 'research', 'جواب خوب معمولاً قبل از طراحی صفحه شروع می‌شه؛ از فهمیدن مسئله.' ),
-		array( 'design', 'prototyping', 'نمونه‌سازی سریع، تصمیم‌های طراحی رو زودتر محک می‌زنه.' ),
-		array( 'ai', 'building', 'فاصله بین یه ایده و یه تجربه واقعی هر روز داره کمتر می‌شه.' ),
-		array( 'ai', 'code', 'کد نوشتن با کمک هوش مصنوعی، مسیر رسیدن به نسخه‌ی اول رو کوتاه‌تر می‌کنه.' ),
-		array( 'ai', 'research', 'هوش مصنوعی کمک می‌کنه سریع‌تر بین داده‌ها و ایده‌ها ارتباط پیدا کنی.' ),
-		array( 'systems', 'code', 'توکن‌ها و پایه‌های قابل‌استفاده‌ی دوباره، پل بین طراحی و کدن.' ),
-		array( 'building', 'writing', 'مستندسازی چیزی که ساختی، خودش بخشی از ساختنه.' ),
-		array( 'research', 'writing', 'نوشتن، ادامه‌ی طبیعی فکر‌کردن و تحقیقه.' ),
+	$chips = array(
+		'design-code' => 'طراحی × کد',
+		'design-ai'   => 'طراحی × هوش مصنوعی',
+		'code-ai'     => 'کد × هوش مصنوعی',
+		'triple'      => 'هر سه با هم',
 	);
 
 	ob_start();
@@ -209,44 +204,54 @@ function sayid_render_signature() {
 		<div class="site-container">
 			<p class="signature__eyebrow"><?php esc_html_e( 'طرز فکر', 'sayid' ); ?></p>
 			<h2 class="signature__title"><?php esc_html_e( 'طراحی × کد × هوش مصنوعی', 'sayid' ); ?></h2>
-			<p class="signature__thesis"><?php esc_html_e( 'کارهای جالب معمولاً درست جایی اتفاق می‌افتن که مرز بین چند مهارت محو می‌شه.', 'sayid' ); ?></p>
+			<p class="signature__thesis"><?php echo esc_html( $default_message ); ?></p>
 
-			<div class="signature-network" data-signature-network>
-				<svg class="signature-network__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-					<?php foreach ( $edges as $edge ) : list( $from, $to ) = $edge; ?>
-						<line
-							class="signature-network__edge"
-							data-edge
-							data-from="<?php echo esc_attr( $from ); ?>"
-							data-to="<?php echo esc_attr( $to ); ?>"
-							x1="<?php echo esc_attr( $nodes[ $from ]['x'] ); ?>"
-							y1="<?php echo esc_attr( $nodes[ $from ]['y'] ); ?>"
-							x2="<?php echo esc_attr( $nodes[ $to ]['x'] ); ?>"
-							y2="<?php echo esc_attr( $nodes[ $to ]['y'] ); ?>"
-						></line>
-					<?php endforeach; ?>
+			<div class="signature-venn" data-signature-venn>
+				<svg class="signature-venn__diagram" viewBox="0 0 400 380" aria-hidden="true">
+					<defs>
+						<clipPath id="sayid-venn-clip-design"><circle cx="150" cy="150" r="125" /></clipPath>
+						<clipPath id="sayid-venn-clip-code"><circle cx="250" cy="150" r="125" /></clipPath>
+						<clipPath id="sayid-venn-clip-ai"><circle cx="200" cy="245" r="125" /></clipPath>
+					</defs>
+
+					<circle class="signature-venn__circle signature-venn__circle--design" cx="150" cy="150" r="125" />
+					<circle class="signature-venn__circle signature-venn__circle--code" cx="250" cy="150" r="125" />
+					<circle class="signature-venn__circle signature-venn__circle--ai" cx="200" cy="245" r="125" />
+
+					<g clip-path="url(#sayid-venn-clip-design)">
+						<circle class="signature-venn__overlap" data-zone="design-code" clip-path="url(#sayid-venn-clip-code)" cx="150" cy="150" r="125" />
+						<circle class="signature-venn__overlap" data-zone="design-ai" clip-path="url(#sayid-venn-clip-ai)" cx="150" cy="150" r="125" />
+					</g>
+					<g clip-path="url(#sayid-venn-clip-code)">
+						<circle class="signature-venn__overlap" data-zone="code-ai" clip-path="url(#sayid-venn-clip-ai)" cx="250" cy="150" r="125" />
+					</g>
+					<g clip-path="url(#sayid-venn-clip-design)">
+						<g clip-path="url(#sayid-venn-clip-code)">
+							<circle class="signature-venn__overlap signature-venn__overlap--triple" data-zone="triple" clip-path="url(#sayid-venn-clip-ai)" cx="150" cy="150" r="125" />
+						</g>
+					</g>
+
+					<?php // text-anchor="middle" on all three: it's direction-neutral, so the labels stay put under this site's dir="rtl" root. ?>
+					<text class="signature-venn__label" x="105" y="70" text-anchor="middle">طراحی</text>
+					<text class="signature-venn__label" x="295" y="70" text-anchor="middle">کد</text>
+					<text class="signature-venn__label" x="200" y="350" text-anchor="middle">هوش مصنوعی</text>
 				</svg>
 
-				<div class="signature-network__nodes">
-					<?php foreach ( $nodes as $key => $node ) : ?>
-						<button
-							type="button"
-							class="signature-node"
-							data-node="<?php echo esc_attr( $key ); ?>"
-							style="--nx:<?php echo esc_attr( $node['x'] ); ?>%;--ny:<?php echo esc_attr( $node['y'] ); ?>%"
-						><?php echo esc_html( $node['label'] ); ?></button>
+				<div class="signature-venn__chips" role="group" aria-label="<?php esc_attr_e( 'رابطه‌ها', 'sayid' ); ?>">
+					<?php foreach ( $chips as $zone => $label ) : ?>
+						<button type="button" class="signature-venn__chip" data-zone-trigger="<?php echo esc_attr( $zone ); ?>">
+							<?php echo esc_html( $label ); ?>
+						</button>
 					<?php endforeach; ?>
 				</div>
 			</div>
 
 			<p class="signature__relationship" data-signature-relationship aria-live="polite">
-				<?php esc_html_e( 'به یکی از نقطه‌ها اشاره کن یا با کیبورد بین‌شون حرکت کن.', 'sayid' ); ?>
+				<?php echo esc_html( $default_message ); ?>
 			</p>
 
-			<script type="application/json" class="signature-network__edges-data" data-signature-edges>
-				<?php echo wp_json_encode( array_map( function ( $edge ) {
-					return array( 'from' => $edge[0], 'to' => $edge[1], 'message' => $edge[2] );
-				}, $edges ) ); ?>
+			<script type="application/json" data-signature-zones>
+				<?php echo wp_json_encode( array( 'default' => $default_message, 'zones' => $zones ) ); ?>
 			</script>
 		</div>
 	</section>
@@ -292,35 +297,49 @@ function sayid_render_notes( $limit = 5 ) {
 	return ob_get_clean();
 }
 
-/** ---------- Featured Article ---------- */
-function sayid_render_featured_article() {
-	$article = sayid_query_featured_article();
-	if ( ! $article ) {
+/** ---------- Articles (compact multi-post grid, not one giant card) ---------- */
+function sayid_render_articles( $limit = 3 ) {
+	$articles = sayid_query_articles( $limit );
+	if ( empty( $articles ) ) {
 		return '';
 	}
-	$subtitle = get_post_meta( $article->ID, 'sayid_subtitle', true );
 	ob_start();
 	?>
 	<section class="section section--article" id="article" data-sayid-article>
 		<div class="site-container">
-			<article class="featured-article">
-				<a class="featured-article__media" href="<?php echo esc_url( get_permalink( $article ) ); ?>">
-					<?php echo sayid_cover_html( get_post_thumbnail_id( $article ), 'sayid-featured', get_the_title( $article ) ); ?>
+			<div class="section__intro">
+				<h2 class="section__title"><?php esc_html_e( 'نوشته‌ها', 'sayid' ); ?></h2>
+			</div>
+			<div class="article-grid">
+				<?php foreach ( $articles as $article ) :
+					$subtitle = get_post_meta( $article->ID, 'sayid_subtitle', true );
+					?>
+					<article class="article-card">
+						<a class="article-card__media" href="<?php echo esc_url( get_permalink( $article ) ); ?>">
+							<?php echo sayid_cover_html( get_post_thumbnail_id( $article ), 'sayid-card', get_the_title( $article ) ); ?>
+						</a>
+						<div class="article-card__body">
+							<h3 class="article-card__title">
+								<a href="<?php echo esc_url( get_permalink( $article ) ); ?>"><?php echo esc_html( get_the_title( $article ) ); ?></a>
+							</h3>
+							<?php if ( $subtitle ) : ?>
+								<p class="article-card__excerpt"><?php echo esc_html( $subtitle ); ?></p>
+							<?php endif; ?>
+							<p class="article-card__meta">
+								<?php echo esc_html( sayid_format_date_short( get_the_time( 'U', $article ) ) ); ?>
+								·
+								<?php echo esc_html( sayid_reading_time_label( $article->post_content ) ); ?>
+							</p>
+						</div>
+					</article>
+				<?php endforeach; ?>
+			</div>
+			<?php $archive = sayid_articles_archive_url(); ?>
+			<?php if ( $archive ) : ?>
+				<a class="section__cta" href="<?php echo esc_url( $archive ); ?>">
+					<?php esc_html_e( 'همه‌ی نوشته‌ها', 'sayid' ); ?>
 				</a>
-				<div class="featured-article__body">
-					<span class="featured-article__eyebrow"><?php esc_html_e( 'نوشته منتخب', 'sayid' ); ?></span>
-					<h2 class="featured-article__title">
-						<a href="<?php echo esc_url( get_permalink( $article ) ); ?>"><?php echo esc_html( get_the_title( $article ) ); ?></a>
-					</h2>
-					<?php if ( $subtitle ) : ?>
-						<p class="featured-article__excerpt"><?php echo esc_html( $subtitle ); ?></p>
-					<?php endif; ?>
-					<p class="featured-article__meta"><?php echo esc_html( sayid_reading_time_label( $article->post_content ) ); ?></p>
-					<a class="featured-article__cta" href="<?php echo esc_url( get_permalink( $article ) ); ?>">
-						<?php esc_html_e( 'ادامه‌ی نوشته', 'sayid' ); ?>
-					</a>
-				</div>
-			</article>
+			<?php endif; ?>
 		</div>
 	</section>
 	<?php
@@ -337,7 +356,7 @@ function sayid_render_connect() {
 			<p class="connect__sub"><?php esc_html_e( 'حرف بزنیم.', 'sayid' ); ?></p>
 			<p class="connect__support"><?php esc_html_e( 'درباره محصول، طراحی، ساختن یا یه مسئله‌ای که هنوز جواب واضحی براش پیدا نکردی.', 'sayid' ); ?></p>
 			<div class="connect__actions">
-				<a class="btn btn--primary" href="mailto:i@moghadam.pro"><?php esc_html_e( 'شروع گفتگو', 'sayid' ); ?></a>
+				<a class="btn btn--primary" href="<?php echo esc_url( sayid_contact_page_url() ); ?>"><?php esc_html_e( 'شروع گفتگو', 'sayid' ); ?></a>
 				<a class="btn btn--ghost" href="https://www.linkedin.com/in/moghadampro/" target="_blank" rel="noopener">LinkedIn</a>
 			</div>
 		</div>
@@ -351,9 +370,9 @@ function sayid_render_theme_switch() {
 	ob_start();
 	?>
 	<div class="theme-switch" data-theme-switch role="group" aria-label="<?php esc_attr_e( 'حالت نمایش', 'sayid' ); ?>">
-		<button type="button" class="theme-switch__btn" data-theme-option="system"><?php esc_html_e( 'سیستم', 'sayid' ); ?></button>
-		<button type="button" class="theme-switch__btn" data-theme-option="light"><?php esc_html_e( 'روشن', 'sayid' ); ?></button>
-		<button type="button" class="theme-switch__btn" data-theme-option="dark"><?php esc_html_e( 'تاریک', 'sayid' ); ?></button>
+		<button type="button" class="theme-switch__btn" data-theme-option="system" aria-label="<?php esc_attr_e( 'سیستم', 'sayid' ); ?>" title="<?php esc_attr_e( 'سیستم', 'sayid' ); ?>"><?php echo sayid_icon_theme( 'system' ); // phpcs:ignore ?></button>
+		<button type="button" class="theme-switch__btn" data-theme-option="light" aria-label="<?php esc_attr_e( 'روشن', 'sayid' ); ?>" title="<?php esc_attr_e( 'روشن', 'sayid' ); ?>"><?php echo sayid_icon_theme( 'light' ); // phpcs:ignore ?></button>
+		<button type="button" class="theme-switch__btn" data-theme-option="dark" aria-label="<?php esc_attr_e( 'تاریک', 'sayid' ); ?>" title="<?php esc_attr_e( 'تاریک', 'sayid' ); ?>"><?php echo sayid_icon_theme( 'dark' ); // phpcs:ignore ?></button>
 	</div>
 	<?php
 	return ob_get_clean();
@@ -393,7 +412,7 @@ function sayid_render_homepage_sections() {
 		sayid_render_lab(),
 		sayid_render_signature(),
 		sayid_render_notes(),
-		sayid_render_featured_article(),
+		sayid_render_articles(),
 		sayid_render_connect(),
 	) ) );
 }

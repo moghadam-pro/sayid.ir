@@ -28,9 +28,11 @@ add_action( 'after_setup_theme', function () {
 	// the block editor's default color picker is not part of the system.
 	add_theme_support( 'disable-custom-colors' );
 
+	// The footer is a fixed compact row (کارها / آزمایشگاه / یادداشت‌ها +
+	// icons), not menu-driven, so only the header needs a registered
+	// location.
 	register_nav_menus( array(
 		'primary' => __( 'منوی اصلی', 'sayid' ),
-		'footer'  => __( 'منوی فوتر', 'sayid' ),
 	) );
 
 	// Editorial-width reading column (brief §26), used as the default

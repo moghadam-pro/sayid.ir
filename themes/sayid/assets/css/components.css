@@ -325,62 +325,78 @@
   max-width: 42ch;
 }
 
-.signature-network {
+/* ---------- Venn diagram ----------
+   Three translucent circles (طراحی/کد/هوش‌مصنوعی) with `mix-blend-mode:
+   screen` against the dark section background, so overlaps glow brighter
+   automatically — no manual overlap-color math needed for the base state.
+   Each pairwise + the triple overlap is a separately clipped SVG shape
+   (see inc/render.php) that lights up on demand via the chip buttons. */
+
+.signature-venn {
   position: relative;
   margin-top: var(--space-24);
-  aspect-ratio: 16 / 10;
-  max-height: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-12);
 }
 
-@media (max-width: 767px) {
-  .signature-network {
-    aspect-ratio: 4 / 5;
-    margin-top: var(--space-16);
-  }
+.signature-venn__diagram {
+  width: min(100%, 460px);
+  isolation: isolate;
 }
 
-.signature-network__lines {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+.signature-venn__circle {
+  fill: color-mix(in srgb, var(--signature-circle-color, var(--color-purple)) 55%, transparent);
+  mix-blend-mode: screen;
 }
 
-.signature-network__edge {
-  stroke: var(--signature-line);
-  stroke-width: .3;
-  vector-effect: non-scaling-stroke;
-  transition: stroke var(--motion-normal) var(--ease-out), opacity var(--motion-normal) var(--ease-out);
+.signature-venn__circle--design { --signature-circle-color: var(--color-purple); }
+.signature-venn__circle--code { --signature-circle-color: var(--color-yellow); }
+.signature-venn__circle--ai { --signature-circle-color: #2fb8c6; }
+
+.signature-venn__overlap {
+  fill: transparent;
+  transition: fill var(--motion-normal) var(--ease-out);
 }
 
-.signature-network__nodes {
-  position: absolute;
-  inset: 0;
+.signature-venn__overlap.is-active {
+  fill: color-mix(in srgb, var(--signature-text) 70%, transparent);
+  mix-blend-mode: screen;
 }
 
-.signature-node {
-  position: absolute;
-  inset-inline-start: var(--nx);
-  inset-block-start: var(--ny);
-  transform: translate(-50%, -50%);
-  white-space: nowrap;
-  font-size: var(--text-small);
-  font-weight: 500;
+.signature-venn__overlap--triple.is-active {
+  fill: var(--signature-text);
+}
+
+.signature-venn__label {
+  fill: var(--signature-text-muted);
+  font-size: 15px;
+  font-family: var(--font-family);
+}
+
+.signature-venn__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.signature-venn__chip {
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-pill);
-  background: var(--signature-surface);
   border: 1px solid var(--signature-line);
+  background: var(--signature-surface);
   color: var(--signature-text-muted);
-  z-index: var(--z-signature-node);
-  transition: color var(--motion-normal) var(--ease-out),
-              border-color var(--motion-normal) var(--ease-out),
-              transform var(--motion-normal) var(--ease-out);
+  font-size: var(--text-small);
+  transition: color var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out);
 }
 
-html[dir="rtl"] .signature-node {
-  transform: translate(50%, -50%);
-  inset-inline-end: var(--nx);
-  inset-inline-start: auto;
+.signature-venn__chip.is-active,
+.signature-venn__chip:hover,
+.signature-venn__chip:focus-visible {
+  color: var(--signature-text);
+  border-color: var(--signature-line-active);
 }
 
 .signature__relationship {
@@ -445,78 +461,64 @@ html[dir="rtl"] .signature-node {
 }
 
 /* ======================================================================
-   06 · Featured Article
+   06 · Articles — compact grid, several small cards rather than one large
+   featured card, so multiple posts fit without dominating the page.
    ====================================================================== */
 
-.featured-article {
+.article-grid {
   display: grid;
-  gap: var(--space-8);
-  border-radius: var(--radius-lg);
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .article-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.article-card {
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
 }
 
-@media (min-width: 1200px) {
-  .featured-article {
-    grid-template-columns: 1.1fr 1fr;
-    align-items: stretch;
-  }
-}
-
-.featured-article__media {
+.article-card__media {
   display: block;
-  aspect-ratio: 16 / 11;
+  aspect-ratio: 16 / 10;
   background: var(--color-surface-subtle);
   overflow: hidden;
 }
 
-.featured-article__media img {
+.article-card__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.featured-article__body {
-  padding: var(--space-8) var(--space-8) var(--space-12);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.article-card__body {
+  padding: var(--space-4) var(--space-4) var(--space-6);
 }
 
-.featured-article__eyebrow {
-  font-size: var(--text-small);
-  color: var(--color-text-muted);
-  font-weight: 500;
-}
-
-.featured-article__title {
-  margin-top: var(--space-3);
-  font-size: var(--text-h2);
-}
-
-.featured-article__title a {
-  text-decoration: none;
-}
-
-.featured-article__excerpt {
-  margin-top: var(--space-4);
-  color: var(--color-text-muted);
+.article-card__title {
   font-size: var(--text-large);
 }
 
-.featured-article__meta {
-  margin-top: var(--space-4);
-  font-size: var(--text-small);
-  color: var(--color-text-muted);
+.article-card__title a {
+  text-decoration: none;
 }
 
-.featured-article__cta {
-  display: inline-block;
-  margin-top: var(--space-8);
-  font-weight: 500;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+.article-card__excerpt {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+.article-card__meta {
+  margin-top: var(--space-3);
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
 }
 
 /* ======================================================================
@@ -623,6 +625,10 @@ html[dir="rtl"] .signature-node {
   flex-wrap: wrap;
 }
 
+.site-nav__list li {
+  position: relative;
+}
+
 .site-nav__list a {
   font-size: var(--text-small);
   font-weight: 500;
@@ -639,6 +645,54 @@ html[dir="rtl"] .signature-node {
   border-inline-end: 1.5px solid currentColor;
   border-block-end: 1.5px solid currentColor;
   transform: rotate(45deg) translateY(-2px);
+}
+
+/* Dropdown submenu — WordPress nests a plain `.sub-menu` <ul> inside the
+   parent <li>; without this it just flows inline in normal document order
+   instead of appearing as a dropdown. */
+.site-nav__list .sub-menu {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 100%;
+  z-index: var(--z-header);
+  min-width: 180px;
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .08);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity var(--motion-fast) var(--ease-out),
+              transform var(--motion-fast) var(--ease-out),
+              visibility var(--motion-fast);
+}
+
+.site-nav__list .sub-menu a {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+.site-nav__list .sub-menu a:hover,
+.site-nav__list .sub-menu a:focus-visible {
+  background: var(--color-surface-subtle);
+}
+
+/* `.is-open` is the touch path: on a device with no real hover, nav.js
+   turns the first tap on a parent item into an open instead of a
+   navigation, so nested items stay reachable. */
+.site-nav__list .menu-item-has-children:hover > .sub-menu,
+.site-nav__list .menu-item-has-children:focus-within > .sub-menu,
+.site-nav__list .menu-item-has-children.is-open > .sub-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .site-nav__mark {
@@ -679,66 +733,70 @@ html[dir="rtl"] .signature-node {
    ====================================================================== */
 
 .site-footer {
-  padding-block: clamp(56px, 8vw, 96px) var(--space-12);
+  padding-block: var(--space-8);
   border-top: 1px solid var(--color-border);
 }
 
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-12);
-}
-
-@media (min-width: 768px) {
-  .footer-grid {
-    grid-template-columns: 1.4fr repeat(3, 1fr);
-  }
-}
-
-.footer-identity__name {
-  font-weight: 600;
-  font-size: var(--text-large);
-}
-
-.footer-identity__role {
-  color: var(--color-text-muted);
-  margin-top: var(--space-1);
-}
-
-.footer-col__title {
-  font-size: var(--text-small);
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-4);
-}
-
-.footer-nav__list,
-.footer-social__list {
-  display: grid;
-  gap: var(--space-3);
-}
-
-.footer-nav__list a,
-.footer-social__list a,
-.footer-english-link {
-  text-decoration: none;
-  color: var(--color-text);
-  font-weight: 500;
-}
-
-.footer-bottom {
-  margin-top: var(--space-24);
-  padding-top: var(--space-8);
-  border-top: 1px solid var(--color-border);
+.footer-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.footer-links a {
+  font-size: var(--text-small);
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.footer-icons {
+  display: flex;
+  align-items: center;
   gap: var(--space-4);
+}
+
+.footer-icons__social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.footer-icons__social a {
+  display: block;
+  color: var(--color-text-muted);
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+.footer-icons__social a:hover,
+.footer-icons__social a:focus-visible {
+  color: var(--color-text);
+}
+
+.footer-bottom {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
 }
 
 .footer-signature {
   font-size: var(--text-small);
   color: var(--color-text-muted);
+}
+
+@media (max-width: 600px) {
+  .footer-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* ======================================================================
@@ -755,9 +813,12 @@ html[dir="rtl"] .signature-node {
 }
 
 .theme-switch__btn {
-  padding: var(--space-1) var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-pill);
-  font-size: var(--text-small);
   color: var(--color-text-muted);
   transition: background-color var(--motion-fast) var(--ease-out), color var(--motion-fast) var(--ease-out);
 }
@@ -957,6 +1018,20 @@ html[dir="rtl"] .signature-node {
 /* ======================================================================
    Contact form
    ====================================================================== */
+
+.contact-channels {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+  color: var(--color-text-muted);
+}
+
+.contact-channels a {
+  color: var(--color-text);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 .contact-form__honeypot {
   position: absolute;

@@ -23,7 +23,7 @@ while ( have_posts() ) : the_post();
 					<?php if ( $subtitle ) : ?>
 						<p class="single-project__lede"><?php echo esc_html( $subtitle ); ?></p>
 					<?php endif; ?>
-					<p class="featured-article__meta">
+					<p class="article-card__meta">
 						<?php echo esc_html( sayid_format_date( get_the_time( 'U' ) ) ); ?>
 						·
 						<?php echo esc_html( sayid_reading_time_label( get_the_content() ) ); ?>

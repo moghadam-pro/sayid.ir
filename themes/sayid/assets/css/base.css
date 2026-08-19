@@ -84,6 +84,12 @@ button {
   cursor: pointer;
 }
 
+/* ---------- Text selection ---------- */
+::selection {
+  background: var(--color-yellow);
+  color: #1b1d29;
+}
+
 /* ---------- Focus ---------- */
 :focus-visible {
   outline: 2px solid var(--color-focus-ring);

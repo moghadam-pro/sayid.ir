@@ -28,10 +28,11 @@ redundant, not additive.
    photo. Until this is set, the Hero shows a neutral placeholder block in
    the photo's exact position/size, so the layout is fully visible and
    testable before the real photo exists.
-7. Appearance → Menus → create and assign a **منوی اصلی** (primary) menu
-   and a **منوی فوتر** (footer) menu. Until menus are assigned, both the
-   header and footer nav fall back to a small set of built-in links so
-   neither ever renders empty.
+7. Appearance → Menus → create and assign a **منوی اصلی** (primary) menu.
+   Until it's assigned, the header nav falls back to a small set of
+   built-in links so it never renders empty. The footer is a fixed compact
+   row (کارها / آزمایشگاه / یادداشت‌ها + icons) and isn't menu-driven, so
+   it needs no separate menu.
 8. Optionally: Tools → Import → WordPress → import `demo-content.xml` for
    one sample of each content type plus empty About/Contact page shells.
    Every imported item is saved as a **draft**, clearly marked as a sample
@@ -71,15 +72,16 @@ sayid/
 │   ├── queries.php         homepage section queries
 │   ├── render.php          render functions for every homepage section
 │   ├── admin-columns.php   status/featured columns on admin list screens
-│   ├── template-tags.php   nav menus, social links
-│   ├── customizer.php      Hero photo control
-│   └── contact-form.php    native contact form handler (no form plugin)
+│   ├── template-tags.php   nav menus, social links, Contact page lookup
+│   ├── customizer.php      Hero photo control, Contact phone number
+│   ├── contact-form.php    native contact form handler (no form plugin)
+│   └── icons.php           inline SVGs: theme-switch icons, social badges
 ├── template-parts/
 │   ├── site-nav.php        shared logo + primary menu markup
 │   └── hero.php            the Hero itself
 ├── assets/
 │   ├── css/                tokens, base, layout, components, hero, interactions
-│   ├── js/                 theme, homepage-entry, lab-pointer, signature-network, hero-marquee
+│   ├── js/                 theme, nav, homepage-entry, lab-pointer, signature-venn, hero-marquee, hero-rotator
 │   └── fonts/               (Estedad woff2 goes here — not bundled)
 ├── header.php / footer.php
 ├── front-page.php           homepage: Hero + deferred sections

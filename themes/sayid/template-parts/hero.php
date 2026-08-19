@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 sayid_enqueue_hero_marquee();
+sayid_enqueue_hero_rotator();
 
 $hero_photo_id = sayid_hero_photo_id();
 $visitor_ip    = sayid_get_visitor_ip();
@@ -28,7 +29,7 @@ $visitor_ip    = sayid_get_visitor_ip();
 			<span>SENIOR PRODUCT DESIGNER&nbsp;</span>
 			<span>SENIOR PRODUCT DESIGNER&nbsp;</span>
 		</div>
-		<div class="home-hero__marquee-row home-hero__marquee-row--b">
+		<div class="home-hero__marquee-row home-hero__marquee-row--b home-hero__marquee-row--outline">
 			<span>SENIOR PRODUCT STORIES&nbsp;</span>
 			<span>SENIOR PRODUCT STORIES&nbsp;</span>
 		</div>
@@ -70,13 +71,18 @@ $visitor_ip    = sayid_get_visitor_ip();
 				<?php esc_html_e( 'سعید مقدم', 'sayid' ); ?>
 				<span class="home-hero__name-suffix"><?php esc_html_e( 'هستم', 'sayid' ); ?></span>
 			</h1>
-			<p class="home-hero__role"><?php esc_html_e( 'طراح ارشد محصول', 'sayid' ); ?></p>
+			<p class="home-hero__role home-hero__role--outline"><?php esc_html_e( 'طراح ارشد محصول', 'sayid' ); ?></p>
 			<p class="home-hero__lede"><?php esc_html_e( 'با بیش از ۱۵ سال تجربه کاری حرفه‌ای، داستان‌های زیادی برای گفتن دارم', 'sayid' ); ?></p>
 
 			<div class="home-hero__actions">
-				<a class="btn btn--dark" href="<?php echo esc_url( home_url( '/about/' ) ); ?>">
-					<?php esc_html_e( 'طراحی رابط کاربری محصولات', 'sayid' ); ?>
-				</a>
+				<?php // Only the phrase currently in view is exposed to assistive tech — the other eleven are visually clipped, so leaving them in the tree would read all twelve as one run-on string. hero-rotator.js moves the aria-hidden as it advances, which is the content change the live region announces. ?>
+				<div class="home-hero__rotator" data-hero-rotator aria-live="polite">
+					<ul class="home-hero__rotator-track">
+						<?php foreach ( sayid_hero_rotator_phrases() as $i => $phrase ) : ?>
+							<li<?php echo $i ? ' aria-hidden="true"' : ''; ?>><?php echo esc_html( $phrase ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
 				<a class="btn btn--accent" href="<?php echo esc_url( get_post_type_archive_link( 'sayid_project' ) ); ?>">
 					<?php esc_html_e( 'بزن بریم نمونه کار ببینیم', 'sayid' ); ?>
 				</a>

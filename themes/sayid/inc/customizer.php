@@ -28,6 +28,24 @@ add_action( 'customize_register', function ( $wp_customize ) {
 		'section'  => 'sayid_hero',
 		'mime_type' => 'image',
 	) ) );
+
+	// Phone is optional and off by default — no real number was provided
+	// during this build (brief §9: don't publish a private phone number
+	// without being told to), so the Contact page's "you can call" option
+	// only appears once a number is actually set here.
+	$wp_customize->add_section( 'sayid_contact', array(
+		'title'    => __( 'صفحه‌ی تماس', 'sayid' ),
+		'priority' => 31,
+	) );
+	$wp_customize->add_setting( 'sayid_contact_phone', array(
+		'default'           => '',
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'sayid_contact_phone', array(
+		'label'       => __( 'شماره تماس (اختیاری — خالی بمونه، گزینه‌ی «زنگ بزن» نشون داده نمی‌شه)', 'sayid' ),
+		'section'     => 'sayid_contact',
+		'type'        => 'text',
+	) );
 } );
 
 /**
@@ -37,4 +55,8 @@ add_action( 'customize_register', function ( $wp_customize ) {
  */
 function sayid_hero_photo_id() {
 	return absint( get_theme_mod( 'sayid_hero_photo', 0 ) );
+}
+
+function sayid_contact_phone() {
+	return get_theme_mod( 'sayid_contact_phone', '' );
 }
