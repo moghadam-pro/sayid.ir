@@ -61,12 +61,17 @@ final class Sayid_Site_Core {
 		require_once SAYID_CORE_PATH . 'includes/class-rest.php';
 		require_once SAYID_CORE_PATH . 'includes/class-admin.php';
 
-		// Elementor integration only loads if Elementor is active.
-		add_action( 'plugins_loaded', function () {
-			if ( did_action( 'elementor/loaded' ) || class_exists( '\Elementor\Plugin' ) ) {
-				require_once SAYID_CORE_PATH . 'includes/class-elementor-widgets.php';
-			}
-		}, 20 );
+		// Elementor integration only loads once Elementor itself has fully
+		// finished loading. `elementor/loaded` is Elementor's own action for
+		// this — it only fires after Elementor has required its base
+		// classes (including \Elementor\Widget_Base). An earlier attempt
+		// here also accepted `class_exists( '\Elementor\Plugin' )` as a
+		// fallback signal, but that class can exist before Widget_Base has
+		// been loaded, which required this file too early and fataled with
+		// "Class Elementor\Widget_Base not found". Only the action is safe.
+		add_action( 'elementor/loaded', function () {
+			require_once SAYID_CORE_PATH . 'includes/class-elementor-widgets.php';
+		} );
 
 		Sayid_Core_Assets::instance();
 		Sayid_Core_Taxonomies::instance();
