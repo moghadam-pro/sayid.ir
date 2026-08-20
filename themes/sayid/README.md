@@ -118,6 +118,27 @@ Per the explicit direction for this rebuild:
   are ever manually duplicated in a template — publishing content is the
   only thing that changes what renders.
 
+## Changelog
+
+The theme's `Version:` header (style.css) and `SAYID_THEME_VERSION`
+(functions.php) are bumped together with every shipped change, so
+Appearance → Themes shows exactly which point in this history is
+installed — compare it against the entries below to tell whether the
+site is running the latest commit on git.
+
+- **1.1.0** — Header: role label ("طراح ارشد محصول") next to the logo,
+  theme switch moved from the footer into the header; fixed a dropdown
+  hover-gap bug in the primary nav. Footer: merged into a single row,
+  real social-icon SVGs. Signature ("طرز فکر") section: fixed a bug
+  where the Venn diagram rendered as a solid black blob, moved to a
+  theme-aware (Hero-matched) background, reduced its height, switched to
+  a 2-column layout. Global: white `::selection` text, site-wide yellow
+  link hover, yellow/white `.btn` hover-active state. Dates now go
+  through plain `date_i18n()` so a Jalali calendar plugin can convert
+  them.
+- **1.0.0** — Initial standalone theme, replacing the `sayid-site-core`
+  plugin + Elementor build (see `docs/17-theme-pivot.md`).
+
 ## Everything else
 
 Field reference, editorial workflow, and responsive/accessibility/
