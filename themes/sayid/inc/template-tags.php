@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function sayid_social_links() {
 	return array(
-		'instagram' => array( 'label' => __( 'اینستاگرام', 'sayid' ), 'url' => '#', 'todo' => true ),
+		'instagram' => array( 'label' => __( 'اینستاگرام', 'sayid' ), 'url' => 'https://www.instagram.com/moghadam.pro' ),
 		'dribbble'  => array( 'label' => __( 'دریبل', 'sayid' ), 'url' => 'https://dribbble.com/moghadam' ),
 		'figma'     => array( 'label' => __( 'فیگما', 'sayid' ), 'url' => 'https://www.figma.com/@moghadam' ),
 		'linkedin'  => array( 'label' => __( 'لینکدین', 'sayid' ), 'url' => 'https://www.linkedin.com/in/moghadampro/' ),

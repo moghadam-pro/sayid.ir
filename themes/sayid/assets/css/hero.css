@@ -196,12 +196,12 @@
 .home-hero__greeting {
   font-size: var(--text-large);
   color: var(--color-text-muted);
-  margin-bottom: var(--space-2);
+  /* margin-bottom: var(--space-2); */
 }
 
 .home-hero__name {
   font-size: clamp(2.5rem, 5vw, 4.25rem);
-  font-weight: 700;
+  font-weight: 900;
   line-height: 1.15;
   margin: 0;
 }
@@ -214,9 +214,11 @@
 }
 
 .home-hero__role {
-  margin-top: var(--space-3);
-  font-size: var(--text-h3);
-  font-weight: 600;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-text-muted);
+  /* margin-top: var(--space-3); */
+  font-size: var(--text-h2);
+  font-weight: 900;
 }
 
 .home-hero__role--outline {

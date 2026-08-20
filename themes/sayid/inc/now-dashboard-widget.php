@@ -62,7 +62,7 @@ function sayid_render_now_dashboard_widget() {
 		<?php wp_nonce_field( 'sayid_save_now', 'sayid_now_nonce' ); ?>
 		<p>
 			<label for="sayid_now_statement"><strong><?php esc_html_e( 'جمله‌ی اصلی', 'sayid' ); ?></strong></label>
-			<textarea name="statement" id="sayid_now_statement" rows="2" style="width:100%"><?php echo esc_textarea( $now['statement'] ); ?></textarea>
+			<textarea name="statement" id="sayid_now_statement" rows="5" style="width:100%"><?php echo esc_textarea( $now['statement'] ); ?></textarea>
 		</p>
 		<p>
 			<label for="sayid_now_building"><strong><?php esc_html_e( 'دارم می‌سازم', 'sayid' ); ?></strong></label>
