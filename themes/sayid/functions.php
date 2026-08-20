@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SAYID_THEME_VERSION', '1.1.0' ); // Keep in sync with style.css's "Version:" header — see README's Changelog.
+define( 'SAYID_THEME_VERSION', '1.2.0' ); // Keep in sync with style.css's "Version:" header — see README's Changelog.
 define( 'SAYID_THEME_DIR', get_template_directory() );
 define( 'SAYID_THEME_URI', get_template_directory_uri() );
 

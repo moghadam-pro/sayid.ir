@@ -90,7 +90,7 @@ sayid/
 │   └── hero.php            the Hero itself
 ├── assets/
 │   ├── css/                tokens, base, layout, components, hero, interactions
-│   ├── js/                 theme, nav, homepage-entry, lab-pointer, signature-venn, hero-marquee, hero-rotator
+│   ├── js/                 theme, nav, homepage-entry, lab-pointer, signature-venn, hero-marquee, hero-rotator, magic-name
 │   └── fonts/               (Estedad woff2 goes here — not bundled)
 ├── header.php / footer.php
 ├── front-page.php           homepage: Hero + deferred sections
@@ -126,6 +126,10 @@ Appearance → Themes shows exactly which point in this history is
 installed — compare it against the entries below to tell whether the
 site is running the latest commit on git.
 
+- **1.2.0** — Hero: restored the hidden click-8-times easter egg on the
+  name ("سعید مقدم", `#magicalTag`) — a canvas firework burst then a
+  redirect to `/magic`, ported over from the retired plugin build
+  (`assets/js/magic-name.js`), plus its yellow hover hint.
 - **1.1.0** — Header: role label ("طراح ارشد محصول") next to the logo,
   theme switch moved from the footer into the header; fixed a dropdown
   hover-gap bug in the primary nav. Footer: merged into a single row,

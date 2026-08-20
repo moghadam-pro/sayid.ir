@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 sayid_enqueue_hero_marquee();
 sayid_enqueue_hero_rotator();
+sayid_enqueue_magic_name();
 
 $hero_photo_id = sayid_hero_photo_id();
 $visitor_ip    = sayid_get_visitor_ip();
@@ -68,7 +69,8 @@ $visitor_ip    = sayid_get_visitor_ip();
 		<div class="home-hero__content">
 			<p class="home-hero__greeting"><?php esc_html_e( 'سلام ، من', 'sayid' ); ?></p>
 			<h1 class="home-hero__name">
-				<?php esc_html_e( 'سعید مقدم', 'sayid' ); ?>
+				<?php // id="magicalTag": a hidden easter egg — 8 clicks within 2s each redirects to /magic. See assets/js/magic-name.js. Not a real link, so no href/role; the hover color-shift is the only visual hint. ?>
+				<span id="magicalTag"><?php esc_html_e( 'سعید مقدم', 'sayid' ); ?></span>
 				<span class="home-hero__name-suffix"><?php esc_html_e( 'هستم', 'sayid' ); ?></span>
 			</h1>
 			<p class="home-hero__role home-hero__role--outline"><?php esc_html_e( 'طراح ارشد محصول', 'sayid' ); ?></p>

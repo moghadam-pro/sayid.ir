@@ -213,6 +213,17 @@
   margin-inline-start: var(--space-2);
 }
 
+/* #magicalTag: the hidden click-8-times easter egg (assets/js/magic-name.js)
+   isn't a real link, so this hover is its only visual hint — same yellow
+   the site's actual links use. */
+#magicalTag {
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+#magicalTag:hover {
+  color: var(--color-yellow);
+}
+
 .home-hero__role {
   color: transparent;
   -webkit-text-stroke: 1px var(--color-text-muted);
