@@ -57,6 +57,12 @@ svg {
 
 a {
   color: inherit;
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--color-yellow);
 }
 
 h1, h2, h3, h4 {
@@ -87,7 +93,7 @@ button {
 /* ---------- Text selection ---------- */
 ::selection {
   background: var(--color-yellow);
-  color: #1b1d29;
+  color: #fff;
 }
 
 /* ---------- Focus ---------- */

@@ -159,7 +159,7 @@
 
 .home-hero__social a:hover,
 .home-hero__social a:focus-visible {
-  color: var(--color-text);
+  color: var(--color-yellow);
 }
 
 .home-hero__media {

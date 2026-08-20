@@ -302,9 +302,42 @@
    04 · Signature — Design × Code × AI
    ====================================================================== */
 
+/* This section borrows Hero's exact surface tones (--signature-bg mirrors
+   --hero-bg's light/dark values) so the two read as one visual family
+   instead of the Hero being light and this being a permanently-dark
+   "immersive moment" — the rest of the palette just follows the site's
+   normal theme-aware tokens. */
 .section--signature {
+  --signature-bg: #eef1f4;
+  --signature-text: var(--color-text);
+  --signature-text-muted: var(--color-text-muted);
+  --signature-surface: var(--color-surface);
+  --signature-line: var(--color-border);
+  --signature-line-active: var(--color-yellow);
+
   background: var(--signature-bg);
   color: var(--signature-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .section--signature {
+    --signature-bg: #101218;
+  }
+}
+
+:root[data-theme="dark"] .section--signature {
+  --signature-bg: #101218;
+}
+
+.signature__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.signature__intro {
+  max-width: 46ch;
 }
 
 .signature__eyebrow {
@@ -322,51 +355,50 @@
   margin-top: var(--space-6);
   font-size: var(--text-large);
   color: var(--signature-text-muted);
-  max-width: 42ch;
 }
 
 /* ---------- Venn diagram ----------
-   Three translucent circles (طراحی/کد/هوش‌مصنوعی) with `mix-blend-mode:
-   screen` against the dark section background, so overlaps glow brighter
-   automatically — no manual overlap-color math needed for the base state.
+   Three solid, distinctly colored circles (طراحی/کد/هوش‌مصنوعی) at partial
+   opacity — plain alpha compositing, so overlaps read as a naturally
+   blended tint with no reliance on `color-mix()`/`mix-blend-mode` support.
    Each pairwise + the triple overlap is a separately clipped SVG shape
-   (see inc/render.php) that lights up on demand via the chip buttons. */
+   (see inc/render.php) that gets a stronger highlight on demand via the
+   chip buttons. */
 
 .signature-venn {
   position: relative;
-  margin-top: var(--space-24);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-12);
+  gap: var(--space-6);
 }
 
 .signature-venn__diagram {
-  width: min(100%, 460px);
-  isolation: isolate;
+  width: min(100%, 360px);
 }
 
 .signature-venn__circle {
-  fill: color-mix(in srgb, var(--signature-circle-color, var(--color-purple)) 55%, transparent);
-  mix-blend-mode: screen;
+  fill: var(--signature-circle-color, var(--color-purple));
+  fill-opacity: .78;
 }
 
-.signature-venn__circle--design { --signature-circle-color: var(--color-purple); }
-.signature-venn__circle--code { --signature-circle-color: var(--color-yellow); }
-.signature-venn__circle--ai { --signature-circle-color: #2fb8c6; }
+.signature-venn__circle--design { --signature-circle-color: #5851c0; }
+.signature-venn__circle--code { --signature-circle-color: #ffba20; }
+.signature-venn__circle--ai { --signature-circle-color: #14c8c8; }
 
 .signature-venn__overlap {
   fill: transparent;
-  transition: fill var(--motion-normal) var(--ease-out);
+  transition: fill var(--motion-normal) var(--ease-out), fill-opacity var(--motion-normal) var(--ease-out);
 }
 
 .signature-venn__overlap.is-active {
-  fill: color-mix(in srgb, var(--signature-text) 70%, transparent);
-  mix-blend-mode: screen;
+  fill: var(--signature-text);
+  fill-opacity: .25;
 }
 
 .signature-venn__overlap--triple.is-active {
-  fill: var(--signature-text);
+  fill: var(--color-yellow);
+  fill-opacity: .55;
 }
 
 .signature-venn__label {
@@ -400,10 +432,19 @@
 }
 
 .signature__relationship {
-  margin-top: var(--space-12);
+  margin-top: var(--space-6);
   color: var(--signature-text-muted);
-  max-width: 46ch;
   min-height: 3em;
+}
+
+@media (max-width: 900px) {
+  .signature__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .signature__intro {
+    max-width: none;
+  }
 }
 
 /* ======================================================================
@@ -598,6 +639,13 @@
 
 .btn--accent:hover { transform: translateY(-1px); }
 
+.btn:hover,
+.btn:focus-visible,
+.btn:active {
+  background: var(--color-yellow);
+  color: #fff;
+}
+
 /* ======================================================================
    Site header / nav (shared between .site-header and .home-hero__nav)
    ====================================================================== */
@@ -636,6 +684,14 @@
   color: var(--color-text);
 }
 
+/* Same specificity as the global `a:hover` in base.css (one class + `a`
+   vs. `a` + `:hover`), so without this the unconditional color above
+   would win the cascade tie by source order and hover would never show. */
+.site-nav__list a:hover,
+.site-nav__list a:focus-visible {
+  color: var(--color-yellow);
+}
+
 .site-nav__list .menu-item-has-children > a::after {
   content: "";
   display: inline-block;
@@ -653,10 +709,14 @@
 .site-nav__list .sub-menu {
   position: absolute;
   inset-inline-start: 0;
+  /* No gap between the link and this box: the parent's :hover state only
+     survives while the pointer stays over the parent <li> or one of its
+     descendants, so a `margin-top` here would open a dead zone the mouse
+     has to cross in mid-air — leaving it before ever reaching the
+     dropdown, which is what was closing the menu while moving toward it. */
   inset-block-start: 100%;
   z-index: var(--z-header);
   min-width: 180px;
-  margin-top: var(--space-2);
   padding: var(--space-2);
   display: flex;
   flex-direction: column;
@@ -695,8 +755,14 @@
   transform: translateY(0);
 }
 
-.site-nav__mark {
+.site-nav__mark-group {
   order: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.site-nav__mark {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -707,6 +773,19 @@
 .site-nav__mark-label {
   font-size: var(--text-small);
   color: var(--color-text-muted);
+}
+
+.site-nav__mark-role {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  padding-inline-start: var(--space-3);
+  border-inline-start: 1px solid var(--color-border);
+}
+
+@media (max-width: 600px) {
+  .site-nav__mark-role {
+    display: none;
+  }
 }
 
 .site-nav__mark-glyph {
@@ -733,22 +812,36 @@
    ====================================================================== */
 
 .site-footer {
-  padding-block: var(--space-8);
+  padding-block: var(--space-4);
   border-top: 1px solid var(--color-border);
 }
 
+/* One row: the copyright line sits at the DOM/visual start (site is RTL,
+   so that's the right edge), the nav links + socials group sits at the
+   end (left edge) — see footer.php. */
 .footer-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.footer-signature {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.footer-links-group {
+  display: flex;
+  align-items: center;
   gap: var(--space-6);
 }
 
 .footer-links {
   display: flex;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 .footer-links a {
@@ -758,10 +851,9 @@
   color: var(--color-text);
 }
 
-.footer-icons {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
+.footer-links a:hover,
+.footer-links a:focus-visible {
+  color: var(--color-yellow);
 }
 
 .footer-icons__social {
@@ -771,25 +863,13 @@
 }
 
 .footer-icons__social a {
-  display: block;
+  display: flex;
   color: var(--color-text-muted);
-  transition: color var(--motion-fast) var(--ease-out);
 }
 
 .footer-icons__social a:hover,
 .footer-icons__social a:focus-visible {
-  color: var(--color-text);
-}
-
-.footer-bottom {
-  margin-top: var(--space-6);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border);
-}
-
-.footer-signature {
-  font-size: var(--text-small);
-  color: var(--color-text-muted);
+  color: var(--color-yellow);
 }
 
 @media (max-width: 600px) {
@@ -797,10 +877,15 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .footer-links-group {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
 }
 
 /* ======================================================================
-   Theme switch (footer control)
+   Theme switch (header control, sits next to the logo mark)
    ====================================================================== */
 
 .theme-switch {
@@ -926,6 +1011,12 @@
   color: var(--color-text-muted);
 }
 
+.single-note__tags a:hover,
+.single-note__tags a:focus-visible {
+  color: var(--color-yellow);
+  border-color: var(--color-yellow);
+}
+
 .single-note__cover,
 .single-lab__cover,
 .single-project__cover {
@@ -1031,6 +1122,11 @@
   font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.contact-channels a:hover,
+.contact-channels a:focus-visible {
+  color: var(--color-yellow);
 }
 
 .contact-form__honeypot {

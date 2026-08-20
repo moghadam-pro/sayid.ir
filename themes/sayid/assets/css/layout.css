@@ -27,7 +27,7 @@
 .section--now { padding-block: clamp(48px, 6vw, 96px); }
 .section--notes { padding-block: clamp(48px, 6vw, 96px); }
 .section--connect { padding-block: clamp(80px, 10vw, 160px); }
-.section--signature { padding-block: clamp(96px, 11vw, 176px); }
+.section--signature { padding-block: clamp(56px, 6vw, 96px); }
 
 .layout-grid {
   display: grid;

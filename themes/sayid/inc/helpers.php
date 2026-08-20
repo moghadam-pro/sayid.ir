@@ -49,30 +49,19 @@ function sayid_to_persian_digits( $value ) {
 	return strtr( (string) $value, array_combine( range( 0, 9 ), $fa ) );
 }
 
-function sayid_persian_month_name( $month_number ) {
-	$months = array(
-		1 => 'ژانویه', 2 => 'فوریه', 3 => 'مارس', 4 => 'آوریل', 5 => 'می',
-		6 => 'ژوئن', 7 => 'ژوئیه', 8 => 'اوت', 9 => 'سپتامبر', 10 => 'اکتبر',
-		11 => 'نوامبر', 12 => 'دسامبر',
-	);
-	return isset( $months[ $month_number ] ) ? $months[ $month_number ] : '';
-}
-
 /**
- * Gregorian date with Persian digits/month names — see
- * docs/12-plugin-reference.md for why this isn't a full Jalali conversion.
+ * Both formatters go through plain `date_i18n()` rather than building the
+ * string component-by-component, so a Jalali calendar plugin (e.g. "Parsi
+ * Date"), which works by filtering `date_i18n`'s output, can convert these
+ * to a real Shamsi day-month-year — without one, digits are still forced
+ * to Persian numerals as the fallback.
  */
 function sayid_format_date( $timestamp ) {
-	$day   = sayid_to_persian_digits( date_i18n( 'j', $timestamp ) );
-	$month = sayid_persian_month_name( (int) date_i18n( 'n', $timestamp ) );
-	$year  = sayid_to_persian_digits( date_i18n( 'Y', $timestamp ) );
-	return "{$day} {$month} {$year}";
+	return sayid_to_persian_digits( date_i18n( 'j F Y', $timestamp ) );
 }
 
 function sayid_format_date_short( $timestamp ) {
-	$day   = sayid_to_persian_digits( date_i18n( 'j', $timestamp ) );
-	$month = sayid_persian_month_name( (int) date_i18n( 'n', $timestamp ) );
-	return "{$day} {$month}";
+	return sayid_to_persian_digits( date_i18n( 'j F', $timestamp ) );
 }
 
 function sayid_resolve_related( $ids ) {

@@ -72,15 +72,6 @@
   --color-border: rgba(19, 21, 26, .10);
   --color-border-strong: rgba(19, 21, 26, .18);
   --color-focus-ring: var(--color-purple);
-
-  /* Signature (dark) section keeps its own surface tokens so it stays an
-     intentional immersive moment rather than a second theme (docs/06 §11). */
-  --signature-bg: #0b0c11;
-  --signature-surface: #14161f;
-  --signature-text: #f6f7fa;
-  --signature-text-muted: #a2a8b8;
-  --signature-line: rgba(255, 255, 255, .16);
-  --signature-line-active: var(--color-yellow);
 }
 
 /* ---------- Dark theme ---------- */

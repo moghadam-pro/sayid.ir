@@ -201,10 +201,12 @@ function sayid_render_signature() {
 	ob_start();
 	?>
 	<section class="section section--signature" id="signature" data-sayid-signature>
-		<div class="site-container">
-			<p class="signature__eyebrow"><?php esc_html_e( 'طرز فکر', 'sayid' ); ?></p>
-			<h2 class="signature__title"><?php esc_html_e( 'طراحی × کد × هوش مصنوعی', 'sayid' ); ?></h2>
-			<p class="signature__thesis"><?php echo esc_html( $default_message ); ?></p>
+		<div class="site-container signature__grid">
+			<div class="signature__intro">
+				<p class="signature__eyebrow"><?php esc_html_e( 'طرز فکر', 'sayid' ); ?></p>
+				<h2 class="signature__title"><?php esc_html_e( 'طراحی × کد × هوش مصنوعی', 'sayid' ); ?></h2>
+				<p class="signature__thesis"><?php echo esc_html( $default_message ); ?></p>
+			</div>
 
 			<div class="signature-venn" data-signature-venn>
 				<svg class="signature-venn__diagram" viewBox="0 0 400 380" aria-hidden="true">
@@ -244,11 +246,11 @@ function sayid_render_signature() {
 						</button>
 					<?php endforeach; ?>
 				</div>
-			</div>
 
-			<p class="signature__relationship" data-signature-relationship aria-live="polite">
-				<?php echo esc_html( $default_message ); ?>
-			</p>
+				<p class="signature__relationship" data-signature-relationship aria-live="polite">
+					<?php echo esc_html( $default_message ); ?>
+				</p>
+			</div>
 
 			<script type="application/json" data-signature-zones>
 				<?php echo wp_json_encode( array( 'default' => $default_message, 'zones' => $zones ) ); ?>
@@ -365,7 +367,7 @@ function sayid_render_connect() {
 	return ob_get_clean();
 }
 
-/** ---------- Theme switch (footer control) ---------- */
+/** ---------- Theme switch (header control) ---------- */
 function sayid_render_theme_switch() {
 	ob_start();
 	?>

@@ -46,6 +46,15 @@ redundant, not additive.
     (top-left box). This is the fastest-changing content on the site —
     see inc/now-dashboard-widget.php.
 
+## Dates
+
+`sayid_format_date()`/`sayid_format_date_short()` (inc/helpers.php) call
+plain `date_i18n( 'j F Y' )`/`date_i18n( 'j F' )` rather than building the
+string themselves, so a Jalali calendar plugin (e.g. "Parsi Date"), which
+works by filtering `date_i18n`'s output, converts these to a real Shamsi
+day-month-year automatically once active. Without one, dates still show as
+Gregorian with Persian digits — not a Jalali conversion on its own.
+
 ## Fonts
 
 Same as the retired plugin: no binary font files are bundled. `base.css`
@@ -75,9 +84,9 @@ sayid/
 │   ├── template-tags.php   nav menus, social links, Contact page lookup
 │   ├── customizer.php      Hero photo control, Contact phone number
 │   ├── contact-form.php    native contact form handler (no form plugin)
-│   └── icons.php           inline SVGs: theme-switch icons, social badges
+│   └── icons.php           inline SVGs: theme-switch icons, social icons
 ├── template-parts/
-│   ├── site-nav.php        shared logo + primary menu markup
+│   ├── site-nav.php        logo + role label + theme switch + primary menu
 │   └── hero.php            the Hero itself
 ├── assets/
 │   ├── css/                tokens, base, layout, components, hero, interactions
