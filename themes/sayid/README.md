@@ -177,6 +177,12 @@ Appearance → Themes shows exactly which point in this history is
 installed — compare it against the entries below to tell whether the
 site is running the latest commit on git.
 
+- **1.3.1** — Fixed a bug in "قالب خام": WordPress's `wptexturize`
+  filter was still rewriting plain `&` into the `&#038;` entity inside
+  page-blank.php's raw content, so any `&&` in an inline `<script>` broke
+  with "Invalid or unexpected token". `wptexturize` and `convert_smilies`
+  are now unhooked from `the_content` there too (alongside `wpautop`),
+  while `do_blocks`/`do_shortcode` stay on so dynamic blocks keep working.
 - **1.3.0** — This-Roozha widget: the three signal titles ("دارم
   می‌سازم" etc.) are now editable text, blank falls back to the original
   wording; their content is a textarea (multi-line). Notes are no longer a
