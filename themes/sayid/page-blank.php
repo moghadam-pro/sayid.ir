@@ -3,28 +3,25 @@
  * Template Name: قالب خام (بدون هدر و فوتر)
  *
  * Equivalent to Elementor's "Canvas" template: no site header/footer, no
- * `.prose`/editorial-width wrapper — just this page's own content.
- * `do_blocks()`/`do_shortcode()` stay hooked on `the_content` (a Query
- * Loop block or a [shortcode] still renders), but every *typographic*
- * filter is unhooked, since those are meant for prose and actively
- * corrupt code:
- *   - wpautop wraps stray <p>/<br> around hand-written HTML.
- *   - wptexturize rewrites plain ASCII into "smart" typography —
- *     critically, literal `&` becomes the entity `&#038;`, so `&&` in any
- *     inline <script> (e.g. `if (a &#038;&#038; b)`) turns into invalid
- *     JavaScript and throws "Invalid or unexpected token" in the console.
- *   - convert_smilies rewrites text emoticons like `:)` into <img> tags.
- * WordPress admins have unfiltered_html by default on a single-site
- * install, so raw HTML/CSS/JS typed into this page (e.g. via the Custom
- * HTML block, or the Code editor) is preserved as-is on save — no extra
- * sanitization bypass needed here.
+ * `.prose`/editorial-width wrapper. The body is a byte-for-byte dump of
+ * whatever is in the page's Code editor — get_the_content() reads
+ * post_content directly and completely bypasses the `the_content` filter
+ * chain, so nothing (wpautop, wptexturize, convert_smilies, do_blocks,
+ * do_shortcode, any plugin hooked there) touches it. That's a deliberate
+ * trade-off: a Gutenberg dynamic block (Query Loop, a [shortcode] block)
+ * would NOT render here, since rendering those *is* what that filter
+ * chain does — but it's also what previously mangled hand-written
+ * <script> (wptexturize turning `&&` into the `&#038;` entity broke a
+ * game's JS with "Invalid or unexpected token"). This template is for a
+ * complete, self-contained HTML/CSS/JS page, not for composing with
+ * blocks, so raw passthrough is the correct default. WordPress admins
+ * have unfiltered_html by default on a single-site install, so what's
+ * typed into the Code editor is exactly what's stored and exactly what's
+ * output here — no sanitization step in between.
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-remove_filter( 'the_content', 'wpautop' );
-remove_filter( 'the_content', 'wptexturize' );
-remove_filter( 'the_content', 'convert_smilies', 20 );
 while ( have_posts() ) : the_post();
 	?>
 <!doctype html>
@@ -36,7 +33,7 @@ while ( have_posts() ) : the_post();
 </head>
 <body <?php body_class( 'sayid-blank-page' ); ?>>
 <?php wp_body_open(); ?>
-<?php the_content(); ?>
+<?php echo get_the_content(); // phpcs:ignore -- raw passthrough is the point of this template, see docblock above ?>
 <?php wp_footer(); ?>
 </body>
 </html>

@@ -87,10 +87,14 @@ frame as a single Article), Page Attributes → Template offers:
   followed by a paginated list of posts, optionally narrowed to one
   دسته‌بندی via the "تنظیمات آرشیو" meta box (blank = every post).
 - **قالب خام (بدون هدر و فوتر)** (`page-blank.php`) — no site header or
-  footer, the page's own content rendered raw (not run through
-  `wpautop`), the same role Elementor's "Canvas" template used to serve.
-  Meant for hand-written HTML/CSS/JS (Custom HTML block or the Code
-  editor) that needs to own the whole `<body>`.
+  footer, the page's own content dumped into `<body>` byte-for-byte (via
+  `get_the_content()`, bypassing the whole `the_content` filter chain —
+  no `wpautop`, no `wptexturize`, no `do_blocks`/`do_shortcode`), the same
+  role Elementor's "Canvas" template used to serve. Meant for a complete,
+  self-contained HTML/CSS/JS page written in the Code editor — trade-off
+  is that a Gutenberg dynamic block (Query Loop, a `[shortcode]` block)
+  won't render here, since producing that output *is* what the bypassed
+  filter chain does.
 - **محتوای صفحه‌ی اصلی (بدون نمایش)** (`page-home-content.php`) — not a
   real destination (visiting it just redirects to `/`); assigning it to
   one page exposes a meta box that becomes the Hero's editable copy
@@ -177,6 +181,13 @@ Appearance → Themes shows exactly which point in this history is
 installed — compare it against the entries below to tell whether the
 site is running the latest commit on git.
 
+- **1.3.2** — "قالب خام" now renders the page's content via
+  `get_the_content()`, bypassing the entire `the_content` filter chain
+  (not just wpautop/wptexturize/convert_smilies one-by-one) — a fully
+  raw, byte-for-byte dump of whatever's in the Code editor, on request.
+  Trade-off: a Gutenberg dynamic block no longer renders on this template
+  (nothing there processes it), unchanged from before for hand-written
+  HTML/CSS/JS.
 - **1.3.1** — Fixed a bug in "قالب خام": WordPress's `wptexturize`
   filter was still rewriting plain `&` into the `&#038;` entity inside
   page-blank.php's raw content, so any `&&` in an inline `<script>` broke
