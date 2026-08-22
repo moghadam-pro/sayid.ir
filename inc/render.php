@@ -115,18 +115,21 @@ function sayid_render_project_card( $project, $featured = false ) {
 
 /** ---------- Lab ---------- */
 function sayid_render_lab() {
-	$items = sayid_query_lab_items( 4 );
+	$count = max( 1, (int) get_theme_mod( 'sayid_lab_count', 4 ) );
+	$items = sayid_query_lab_items( $count );
 	if ( empty( $items ) ) {
 		return '';
 	}
 	sayid_enqueue_lab_pointer();
+	$title       = sayid_theme_text( 'sayid_lab_title', __( 'چیزهایی که می‌سازم', 'sayid' ) );
+	$description = sayid_theme_text( 'sayid_lab_description', __( 'بعضی چیزها از یه مسئله واقعی شروع می‌شن، بعضی‌ها فقط از کنجکاوی. اینجا جاییه برای چیزهایی که می‌سازم، تست می‌کنم، خراب می‌کنم و گاهی هم منتشرشون می‌کنم.', 'sayid' ) );
 	ob_start();
 	?>
 	<section class="section section--lab" id="lab" data-sayid-lab>
 		<div class="site-container">
 			<div class="section__intro">
-				<h2 class="section__title"><?php esc_html_e( 'چیزهایی که می‌سازم', 'sayid' ); ?></h2>
-				<p class="section__lede"><?php esc_html_e( 'بعضی چیزها از یه مسئله واقعی شروع می‌شن، بعضی‌ها فقط از کنجکاوی. اینجا جاییه برای چیزهایی که می‌سازم، تست می‌کنم، خراب می‌کنم و گاهی هم منتشرشون می‌کنم.', 'sayid' ); ?></p>
+				<h2 class="section__title"><?php echo esc_html( $title ); ?></h2>
+				<p class="section__lede"><?php echo esc_html( $description ); ?></p>
 			</div>
 			<div class="lab-grid">
 				<?php foreach ( $items as $i => $item ) : ?>
@@ -167,9 +170,14 @@ function sayid_render_lab_card( $item, $primary = false ) {
 
 /** ---------- Signature: Design × Code × AI ---------- */
 function sayid_render_signature() {
+	if ( ! get_theme_mod( 'sayid_signature_enabled', true ) ) {
+		return '';
+	}
 	sayid_enqueue_signature_venn();
 
-	$default_message = __( 'کارهای جالب معمولاً درست جایی اتفاق می‌افتن که مرز بین چند مهارت محو می‌شه.', 'sayid' );
+	$eyebrow          = sayid_theme_text( 'sayid_signature_eyebrow', __( 'طرز فکر', 'sayid' ) );
+	$title            = sayid_theme_text( 'sayid_signature_title', __( 'طراحی × کد × هوش مصنوعی', 'sayid' ) );
+	$default_message  = sayid_theme_text( 'sayid_signature_thesis', __( 'کارهای جالب معمولاً درست جایی اتفاق می‌افتن که مرز بین چند مهارت محو می‌شه.', 'sayid' ) );
 
 	// Three discipline circles + every zone a visitor can activate: the
 	// three pairwise overlaps and the center where all three meet. Each
@@ -193,8 +201,8 @@ function sayid_render_signature() {
 	<section class="section section--signature" id="signature" data-sayid-signature>
 		<div class="site-container signature__grid">
 			<div class="signature__intro">
-				<p class="signature__eyebrow"><?php esc_html_e( 'طرز فکر', 'sayid' ); ?></p>
-				<h2 class="signature__title"><?php esc_html_e( 'طراحی × کد × هوش مصنوعی', 'sayid' ); ?></h2>
+				<p class="signature__eyebrow"><?php echo esc_html( $eyebrow ); ?></p>
+				<h2 class="signature__title"><?php echo esc_html( $title ); ?></h2>
 				<p class="signature__thesis"><?php echo esc_html( $default_message ); ?></p>
 			</div>
 
@@ -291,6 +299,9 @@ function sayid_render_notes( $limit = 5 ) {
 
 /** ---------- Articles (compact multi-post grid, not one giant card) ---------- */
 function sayid_render_articles( $limit = 3 ) {
+	if ( ! get_theme_mod( 'sayid_articles_enabled', true ) ) {
+		return '';
+	}
 	$articles = sayid_query_articles( $limit );
 	if ( empty( $articles ) ) {
 		return '';
@@ -340,16 +351,23 @@ function sayid_render_articles( $limit = 3 ) {
 
 /** ---------- Connect ---------- */
 function sayid_render_connect() {
+	$title       = sayid_theme_text( 'sayid_connect_title', __( 'یه ایده جالب توی ذهنت داری؟', 'sayid' ) );
+	$subtitle    = sayid_theme_text( 'sayid_connect_subtitle', __( 'حرف بزنیم.', 'sayid' ) );
+	$description = sayid_theme_text( 'sayid_connect_description', __( 'درباره محصول، طراحی، ساختن یا یه مسئله‌ای که هنوز جواب واضحی براش پیدا نکردی.', 'sayid' ) );
+	$btn1_label  = sayid_theme_text( 'sayid_connect_btn1_label', __( 'شروع گفتگو', 'sayid' ) );
+	$btn1_url    = sayid_theme_text( 'sayid_connect_btn1_url', sayid_contact_page_url() );
+	$btn2_label  = sayid_theme_text( 'sayid_connect_btn2_label', 'LinkedIn' );
+	$btn2_url    = sayid_theme_text( 'sayid_connect_btn2_url', 'https://www.linkedin.com/in/moghadampro/' );
 	ob_start();
 	?>
 	<section class="section section--connect" id="connect" data-sayid-connect>
 		<div class="site-container connect">
-			<h2 class="connect__title"><?php esc_html_e( 'یه ایده جالب توی ذهنت داری؟', 'sayid' ); ?></h2>
-			<p class="connect__sub"><?php esc_html_e( 'حرف بزنیم.', 'sayid' ); ?></p>
-			<p class="connect__support"><?php esc_html_e( 'درباره محصول، طراحی، ساختن یا یه مسئله‌ای که هنوز جواب واضحی براش پیدا نکردی.', 'sayid' ); ?></p>
+			<h2 class="connect__title"><?php echo esc_html( $title ); ?></h2>
+			<p class="connect__sub"><?php echo esc_html( $subtitle ); ?></p>
+			<p class="connect__support"><?php echo esc_html( $description ); ?></p>
 			<div class="connect__actions">
-				<a class="btn btn--primary" href="<?php echo esc_url( sayid_contact_page_url() ); ?>"><?php esc_html_e( 'شروع گفتگو', 'sayid' ); ?></a>
-				<a class="btn btn--ghost" href="https://www.linkedin.com/in/moghadampro/" target="_blank" rel="noopener">LinkedIn</a>
+				<a class="btn btn--primary" href="<?php echo esc_url( $btn1_url ); ?>"><?php echo esc_html( $btn1_label ); ?></a>
+				<a class="btn btn--ghost" href="<?php echo esc_url( $btn2_url ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $btn2_label ); ?></a>
 			</div>
 		</div>
 	</section>

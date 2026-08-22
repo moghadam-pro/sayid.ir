@@ -1,15 +1,12 @@
 <?php
 /**
  * The homepage Hero — composition (layout, marquee, nav) is fixed in this
- * template, matching the reference screenshot (see
- * docs/16-final-implementation-report.md "Theme pivot"). The copy itself
- * (greeting/name/role/lede/CTA/rotator phrases) is editable without a code
- * deploy through sayid_home_field() (inc/template-tags.php), which reads
- * the page assigned page-home-content.php — see that file's docblock.
- * Every field falls back to the confirmed original copy when that page or
- * field doesn't exist yet, so this never renders empty. Nav lives inside
- * this section so header + hero read as one continuous first-viewport
- * composition, per the original brief's Hero direction.
+ * template. The copy itself (greeting/name/role/lede/CTA/rotator phrases)
+ * is editable from Appearance → Customize → "هیرو صفحه‌ی اصلی"
+ * (inc/customizer.php), read here through sayid_theme_text() with the
+ * confirmed original copy as the fallback, so this never renders empty.
+ * Nav lives inside this section so header + hero read as one continuous
+ * first-viewport composition, per the original brief's Hero direction.
  *
  * The background text is two independent marquee lines moving opposite
  * directions at a slow, constant speed — animated in hero.css, no JS
@@ -29,12 +26,12 @@ sayid_enqueue_magic_name();
 $hero_photo_id = sayid_hero_photo_id();
 $visitor_ip    = sayid_get_visitor_ip();
 
-$hero_greeting    = sayid_home_field( 'sayid_hero_greeting', __( 'سلام ، من', 'sayid' ) );
-$hero_name        = sayid_home_field( 'sayid_hero_name', __( 'سعید مقدم', 'sayid' ) );
-$hero_name_suffix = sayid_home_field( 'sayid_hero_name_suffix', __( 'هستم', 'sayid' ) );
-$hero_role        = sayid_home_field( 'sayid_hero_role', __( 'طراح ارشد محصول', 'sayid' ) );
-$hero_lede        = sayid_home_field( 'sayid_hero_lede', __( 'با بیش از ۱۵ سال تجربه کاری حرفه‌ای، داستان‌های زیادی برای گفتن دارم', 'sayid' ) );
-$hero_cta_label   = sayid_home_field( 'sayid_hero_cta_label', __( 'بزن بریم نمونه کار ببینیم', 'sayid' ) );
+$hero_greeting    = sayid_theme_text( 'sayid_hero_greeting', __( 'سلام ، من', 'sayid' ) );
+$hero_name        = sayid_theme_text( 'sayid_hero_name', __( 'سعید مقدم', 'sayid' ) );
+$hero_name_suffix = sayid_theme_text( 'sayid_hero_name_suffix', __( 'هستم', 'sayid' ) );
+$hero_role        = sayid_theme_text( 'sayid_hero_role', __( 'طراح ارشد محصول', 'sayid' ) );
+$hero_lede        = sayid_theme_text( 'sayid_hero_lede', __( 'با بیش از ۱۵ سال تجربه کاری حرفه‌ای، داستان‌های زیادی برای گفتن دارم', 'sayid' ) );
+$hero_cta_label   = sayid_theme_text( 'sayid_hero_cta_label', __( 'بزن بریم نمونه کار ببینیم', 'sayid' ) );
 ?>
 <section class="home-hero" data-sayid-hero>
 	<div class="home-hero__marquee" aria-hidden="true" data-hero-marquee>

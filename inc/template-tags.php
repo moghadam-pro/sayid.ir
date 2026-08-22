@@ -28,8 +28,7 @@ function sayid_social_links() {
 /**
  * Finds the one published page assigned a given template — by template
  * rather than by slug, since Persian titles don't reliably produce a clean
- * URL to hardcode. Used for both the Contact page and the Hero's
- * content-source page.
+ * URL to hardcode. Used for the Contact page.
  */
 function sayid_page_by_template( $template ) {
 	static $cache = array();
@@ -53,25 +52,10 @@ function sayid_contact_page_url() {
 }
 
 /**
- * Reads one Hero field from the page assigned page-home-content.php
- * (inc/meta-fields.php's "page" field map), falling back to $default when
- * no such page exists yet or the field was left blank — so the homepage
- * always renders something sensible before anyone touches wp-admin.
- */
-function sayid_home_field( $key, $default = '' ) {
-	$page_id = sayid_page_by_template( 'page-home-content.php' );
-	if ( ! $page_id ) {
-		return $default;
-	}
-	$value = get_post_meta( $page_id, $key, true );
-	return ( '' !== trim( (string) $value ) ) ? $value : $default;
-}
-
-/**
  * The Hero's rotating headline chip — cycles through these phrases with a
  * slide-down transition (assets/js/hero-rotator.js). One phrase per line
- * in the "محتوای صفحه‌ی اصلی" page field; falls back to this confirmed
- * default list when that page/field doesn't exist yet.
+ * in the "هیرو صفحه‌ی اصلی" Customizer field; falls back to this
+ * confirmed default list when that field is left blank.
  */
 function sayid_hero_rotator_phrases() {
 	$default = array(
@@ -89,8 +73,8 @@ function sayid_hero_rotator_phrases() {
 		__( 'تست‌های تجربه کاربری', 'sayid' ),
 	);
 
-	$raw = sayid_home_field( 'sayid_hero_rotator_phrases', '' );
-	if ( '' === $raw ) {
+	$raw = get_theme_mod( 'sayid_hero_rotator_phrases', '' );
+	if ( '' === trim( (string) $raw ) ) {
 		return $default;
 	}
 	$lines = array_filter( array_map( 'trim', explode( "\n", $raw ) ) );

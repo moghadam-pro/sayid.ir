@@ -13,8 +13,9 @@ This theme is free. There are no restrictions on installing or using it.
   category), Lab items, and Projects, sharing one taxonomy across all
   three.
 - A single-viewport Hero with an animated background, a rotating
-  headline, and copy that can be edited from a WordPress Page's custom
-  fields instead of being hardcoded.
+  headline, and copy — plus the Lab, Signature, and Connect sections'
+  text, item counts, and per-section visibility — all editable from
+  Appearance → Customize instead of being hardcoded.
 - A homepage assembled entirely from dynamic sections — a "Now" panel, a
   Selected Work grid, a Lab grid, a Signature (Venn-diagram) section, a
   Latest Notes list, and a compact Articles grid. Every section is
@@ -22,7 +23,7 @@ This theme is free. There are no restrictions on installing or using it.
   the content itself.
 - A "Now" panel editable directly from the WordPress Dashboard, meant to
   be the fastest thing on the site to update.
-- Four selectable Page templates beyond the default: a reusable
+- Three selectable Page templates beyond the default: a reusable
   form page (configurable recipient email), an archive/list page
   (optionally scoped to one category), and a blank page template with no
   header or footer that renders its content completely raw — for a
@@ -65,8 +66,26 @@ This theme is free. There are no restrictions on installing or using it.
   content is dumped into `<body>` exactly as written in the block
   editor's Code view, with no WordPress content filtering applied at all,
   for a fully self-contained page (its own `<style>`/`<script>`).
-- A separate, non-visited utility template exposes a meta box that
-  becomes the editable source for the Hero's text content.
+
+## Customizer
+
+Appearance → Customize exposes homepage copy and section visibility
+directly, alongside WordPress's own site-identity controls:
+
+- **Hero** — photo, greeting, name, name suffix, role, lede, CTA button
+  label, and the rotating headline's phrases (one per line).
+- **Lab section** — title, description, and how many items to show.
+- **Signature section** — a visibility toggle, plus the eyebrow, title,
+  and main sentence.
+- **Articles section** — a visibility toggle.
+- **Connect section** — title, subtitle, description, and both buttons'
+  label and link.
+- **Contact page** — an optional phone number (leaving it blank hides the
+  "you can call" option on the Contact page).
+
+Every field falls back to the theme's original copy when left blank, and
+the "Now" panel is intentionally not here — it has its own dedicated
+Dashboard widget instead (see above).
 
 ## Design system
 
@@ -96,7 +115,7 @@ inc/
   render.php               render functions for every homepage section
   admin-columns.php        admin list-screen columns
   template-tags.php        nav menus, social links, page lookups
-  customizer.php           Hero photo control, contact phone number
+  customizer.php           Homepage Customizer controls (see "Customizer" above)
   contact-form.php         the dedicated Contact page's form handler
   form-template.php        the reusable form template's form handler
   icons.php                inline SVG icons
@@ -119,7 +138,6 @@ page-contact.php             the dedicated Contact page
 page-form.php                 reusable form page template
 page-archive.php              post-list page template
 page-blank.php                 raw, no-header/footer page template
-page-home-content.php          Hero content source (not a visited page)
 404.php / index.php
 demo-content.xml               sample content (WXR)
 ```
@@ -129,6 +147,14 @@ demo-content.xml               sample content (WXR)
 The theme's version header (`style.css`) and the matching constant in
 `functions.php` are bumped together with every shipped change.
 
+- **1.4.0** — Moved homepage content editing to Appearance → Customize.
+  The Hero's copy (already editable via a Page meta box) moved there, and
+  gained company: the Lab section's title/description/item count, the
+  Signature section's visibility toggle and eyebrow/title/main-sentence
+  text, the Articles section's visibility toggle, and the Connect
+  section's title/subtitle/description and both buttons' label and link.
+  The Page-template-based mechanism this replaces for the Hero
+  (page-home-content.php and its meta box) was removed entirely.
 - **1.3.2** — The blank page template now renders content completely
   raw, bypassing WordPress's entire content filter pipeline, so what's
   written in the Code editor is output byte-for-byte with nothing

@@ -77,21 +77,6 @@ function sayid_field_map( $field_map_key ) {
 				$common_related
 			);
 
-		// Only rendered on the one page using page-home-content.php — see
-		// the add_meta_boxes_page hook below. Every key falls back to the
-		// current hardcoded Hero copy when empty (template-parts/hero.php),
-		// so this never has to be filled in before the homepage works.
-		case 'page:home-content':
-			return array(
-				'sayid_hero_greeting'        => array( 'type' => 'string', 'sanitize' => 'text' ),
-				'sayid_hero_name'            => array( 'type' => 'string', 'sanitize' => 'text' ),
-				'sayid_hero_name_suffix'     => array( 'type' => 'string', 'sanitize' => 'text' ),
-				'sayid_hero_role'            => array( 'type' => 'string', 'sanitize' => 'text' ),
-				'sayid_hero_lede'            => array( 'type' => 'string', 'sanitize' => 'textarea' ),
-				'sayid_hero_cta_label'       => array( 'type' => 'string', 'sanitize' => 'text' ),
-				'sayid_hero_rotator_phrases' => array( 'type' => 'string', 'sanitize' => 'textarea' ),
-			);
-
 		// Any page using page-form.php — see inc/form-template.php. Blank
 		// recipient falls back to the site admin email at send time.
 		case 'page:form':
@@ -119,9 +104,6 @@ function sayid_page_field_map_key( $post_id ) {
 }
 
 function sayid_field_map_key_for_template( $template ) {
-	if ( 'page-home-content.php' === $template ) {
-		return 'page:home-content';
-	}
 	if ( 'page-form.php' === $template ) {
 		return 'page:form';
 	}
@@ -133,14 +115,14 @@ function sayid_field_map_key_for_template( $template ) {
 
 add_action( 'init', function () {
 	// register_post_meta() is keyed by the real post type, so both `page`
-	// field maps (home-content, form) get registered under 'page' — which
-	// map applies to a given page is decided per-template at render/save
+	// field maps (form, archive) get registered under 'page' — which map
+	// applies to a given page is decided per-template at render/save
 	// time by sayid_page_field_map_key(), not by registration.
 	$field_maps = array(
 		'post'          => array( 'post' ),
 		'sayid_lab'     => array( 'sayid_lab' ),
 		'sayid_project' => array( 'sayid_project' ),
-		'page'          => array( 'page:home-content', 'page:form', 'page:archive' ),
+		'page'          => array( 'page:form', 'page:archive' ),
 	);
 	foreach ( $field_maps as $post_type => $keys ) {
 		foreach ( $keys as $field_map_key ) {
@@ -175,9 +157,7 @@ add_action( 'add_meta_boxes', function () {
  */
 add_action( 'add_meta_boxes_page', function ( $post ) {
 	$field_map_key = sayid_page_field_map_key( $post->ID );
-	if ( 'page:home-content' === $field_map_key ) {
-		add_meta_box( 'sayid_home_content_fields', __( 'محتوای صفحه‌ی اصلی (هیرو)', 'sayid' ), 'sayid_render_meta_box', 'page', 'normal', 'high', array( 'field_map_key' => $field_map_key ) );
-	} elseif ( 'page:form' === $field_map_key ) {
+	if ( 'page:form' === $field_map_key ) {
 		add_meta_box( 'sayid_form_fields', __( 'تنظیمات فرم', 'sayid' ), 'sayid_render_meta_box', 'page', 'normal', 'high', array( 'field_map_key' => $field_map_key ) );
 	} elseif ( 'page:archive' === $field_map_key ) {
 		add_meta_box( 'sayid_archive_fields', __( 'تنظیمات آرشیو', 'sayid' ), 'sayid_render_meta_box', 'page', 'normal', 'high', array( 'field_map_key' => $field_map_key ) );
@@ -214,13 +194,6 @@ function sayid_field_label( $key ) {
 		'sayid_related_posts'     => __( 'نوشته‌های مرتبط (یادداشت/مقاله)', 'sayid' ),
 		'sayid_related_lab'       => __( 'آیتم‌های آزمایشگاه مرتبط', 'sayid' ),
 		'sayid_related_projects'  => __( 'پروژه‌های مرتبط', 'sayid' ),
-		'sayid_hero_greeting'     => __( 'متن سلام (پیش از اسم)', 'sayid' ),
-		'sayid_hero_name'         => __( 'اسم', 'sayid' ),
-		'sayid_hero_name_suffix'  => __( 'پسوند اسم (مثلاً «هستم»)', 'sayid' ),
-		'sayid_hero_role'         => __( 'عنوان شغلی', 'sayid' ),
-		'sayid_hero_lede'         => __( 'توضیح زیر عنوان شغلی', 'sayid' ),
-		'sayid_hero_cta_label'    => __( 'متن دکمه', 'sayid' ),
-		'sayid_hero_rotator_phrases'  => __( 'عبارت‌های چرخشی (هرکدوم در یک خط)', 'sayid' ),
 		'sayid_form_recipient_email' => __( 'ایمیل گیرنده (خالی = ایمیل مدیر سایت)', 'sayid' ),
 		'sayid_archive_category'     => __( 'دسته‌بندی (خالی = همه‌ی نوشته‌ها)', 'sayid' ),
 	);
@@ -379,23 +352,21 @@ add_action( 'save_post', function ( $post_id, $post ) {
 	}
 
 	if ( 'page' === $post->post_type ) {
-		// Which of the three page field-maps is "the" one for this page
-		// isn't reliable to determine here: WordPress core writes
-		// _wp_page_template *after* save_post fires (so
-		// get_page_template_slug() can lag by one save), and it's
-		// unconfirmed whether the block editor's meta-box-compat POST even
-		// carries page_template at all (Page Attributes is native/REST
-		// there). So instead of guessing which map applies and saving all
-		// of it (blanking the other maps' keys in the process), every page
-		// field is saved only if its own key is actually present in
-		// $_POST — which only happens when the metabox that key belongs to
-		// was the one actually rendered (and thus submitted) this time.
-		// None of the three page field-maps use the 'bool' sanitize type,
-		// where a missing key would ambiguously mean "unchecked" instead
-		// of "not this page's field" — if one ever does, this needs
-		// revisiting.
+		// Which of the two page field-maps is "the" one for this page isn't
+		// reliable to determine here: WordPress core writes _wp_page_template
+		// *after* save_post fires (so get_page_template_slug() can lag by
+		// one save), and it's unconfirmed whether the block editor's
+		// meta-box-compat POST even carries page_template at all (Page
+		// Attributes is native/REST there). So instead of guessing which map
+		// applies and saving all of it (blanking the other map's keys in the
+		// process), every page field is saved only if its own key is
+		// actually present in $_POST — which only happens when the metabox
+		// that key belongs to was the one actually rendered (and thus
+		// submitted) this time. Neither page field-map uses the 'bool'
+		// sanitize type, where a missing key would ambiguously mean
+		// "unchecked" instead of "not this page's field" — if one ever
+		// does, this needs revisiting.
 		$page_fields = array_merge(
-			sayid_field_map( 'page:home-content' ),
 			sayid_field_map( 'page:form' ),
 			sayid_field_map( 'page:archive' )
 		);
