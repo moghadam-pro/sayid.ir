@@ -1,7 +1,8 @@
 <?php
 /**
- * Single Article (native `post`, relabeled "نوشته‌ها" — see
- * inc/content-types.php for why Articles aren't a custom post type).
+ * Single Article or Note — both are the native `post` type (relabeled
+ * "نوشته‌ها"), Notes just carry the "یادداشت" category — see
+ * inc/content-types.php.
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,6 +11,7 @@ get_header();
 while ( have_posts() ) : the_post();
 	$id       = get_the_ID();
 	$subtitle = get_post_meta( $id, 'sayid_subtitle', true );
+	$source   = get_post_meta( $id, 'sayid_source_url', true );
 	$terms    = get_the_terms( $id, 'sayid_topic' );
 	?>
 	<main class="section single-article">
@@ -42,6 +44,13 @@ while ( have_posts() ) : the_post();
 				<?php endif; ?>
 
 				<div class="prose"><?php the_content(); ?></div>
+
+				<?php if ( $source ) : ?>
+					<p class="single-note__source">
+						<?php esc_html_e( 'منبع:', 'sayid' ); ?>
+						<a href="<?php echo esc_url( $source ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $source ); ?></a>
+					</p>
+				<?php endif; ?>
 			</article>
 
 			<?php echo sayid_render_related( $id ); // phpcs:ignore ?>

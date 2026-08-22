@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<nav class="footer-links" aria-label="<?php esc_attr_e( 'ناوبری فوتر', 'sayid' ); ?>">
 				<a href="<?php echo esc_url( get_post_type_archive_link( 'sayid_project' ) ); ?>"><?php esc_html_e( 'کارها', 'sayid' ); ?></a>
 				<a href="<?php echo esc_url( get_post_type_archive_link( 'sayid_lab' ) ); ?>"><?php esc_html_e( 'آزمایشگاه', 'sayid' ); ?></a>
-				<a href="<?php echo esc_url( get_post_type_archive_link( 'sayid_note' ) ); ?>"><?php esc_html_e( 'یادداشت‌ها', 'sayid' ); ?></a>
+				<a href="<?php echo esc_url( get_category_link( sayid_notes_category_id() ) ); ?>"><?php esc_html_e( 'یادداشت‌ها', 'sayid' ); ?></a>
 			</nav>
 
 			<ul class="footer-icons__social">

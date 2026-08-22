@@ -10,8 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function sayid_get_related( $post_id ) {
 	$groups = array(
-		'notes'    => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_notes', true ) ),
-		'articles' => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_articles', true ) ),
+		'posts'    => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_posts', true ) ),
 		'lab'      => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_lab', true ) ),
 		'projects' => sayid_resolve_related( get_post_meta( $post_id, 'sayid_related_projects', true ) ),
 	);

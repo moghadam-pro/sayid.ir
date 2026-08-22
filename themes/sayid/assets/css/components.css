@@ -938,6 +938,34 @@
   max-width: 46ch;
 }
 
+.archive-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-12);
+}
+
+.archive-tabs__item {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.archive-tabs__item:hover,
+.archive-tabs__item:focus-visible {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
+.archive-tabs__item.is-active {
+  background: var(--color-text);
+  border-color: var(--color-text);
+  color: var(--color-bg);
+}
+
 .archive__pagination {
   margin-top: var(--space-16);
 }

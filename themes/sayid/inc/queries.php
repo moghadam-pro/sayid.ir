@@ -67,11 +67,22 @@ function sayid_query_lab_items( $limit = 4 ) {
 	) );
 }
 
+/**
+ * Notes are `post`s in the "یادداشت" category (see
+ * inc/content-types.php's sayid_notes_category_id()) rather than a
+ * separate post type — an empty array here just means that category
+ * hasn't been used yet, not an error.
+ */
 function sayid_query_latest_notes( $limit = 5 ) {
+	$category_id = sayid_notes_category_id();
+	if ( ! $category_id ) {
+		return array();
+	}
 	return get_posts( array(
-		'post_type'      => 'sayid_note',
+		'post_type'      => 'post',
 		'post_status'    => 'publish',
 		'posts_per_page' => $limit,
+		'category__in'   => array( $category_id ),
 		'orderby'        => 'date',
 		'order'          => 'DESC',
 	) );
@@ -82,26 +93,51 @@ function sayid_query_latest_notes( $limit = 5 ) {
  * (sayid_featured_homepage = 1) is pinned first when one exists, so the
  * "featured" concept still means something even though the section is now
  * a compact multi-post grid rather than one large single card.
+ *
+ * Excludes the "یادداشت" category — Notes are `post`s too (see
+ * inc/content-types.php), but they get their own homepage rail
+ * (sayid_query_latest_notes()); without this exclusion a Note would show
+ * up in both sections at once, and could even get pinned into this one via
+ * the shared sayid_featured_homepage checkbox.
  */
 function sayid_query_articles( $limit = 3 ) {
+	$exclude_categories = array_filter( array( sayid_notes_category_id() ) );
+
 	$featured = get_posts( array(
-		'post_type'      => 'post',
-		'post_status'    => 'publish',
-		'posts_per_page' => $limit,
-		'meta_query'     => array(
+		'post_type'         => 'post',
+		'post_status'       => 'publish',
+		'posts_per_page'    => $limit,
+		'category__not_in'  => $exclude_categories,
+		'meta_query'        => array(
 			array( 'key' => 'sayid_featured_homepage', 'value' => '1', 'compare' => '=' ),
 		),
 	) );
 
 	$remaining = max( 0, $limit - count( $featured ) );
 	$rest      = $remaining ? get_posts( array(
-		'post_type'      => 'post',
-		'post_status'    => 'publish',
-		'posts_per_page' => $remaining,
-		'post__not_in'   => wp_list_pluck( $featured, 'ID' ),
-		'orderby'        => 'date',
-		'order'          => 'DESC',
+		'post_type'        => 'post',
+		'post_status'      => 'publish',
+		'posts_per_page'   => $remaining,
+		'category__not_in' => $exclude_categories,
+		'post__not_in'     => wp_list_pluck( $featured, 'ID' ),
+		'orderby'          => 'date',
+		'order'            => 'DESC',
 	) ) : array();
 
 	return array_slice( array_merge( $featured, $rest ), 0, $limit );
 }
+
+/**
+ * Keeps the "Articles" content stream (the Posts-page index, home.php)
+ * disjoint from Notes, same reasoning as sayid_query_articles() above.
+ * Notes still have their own archive at category-note.php.
+ */
+add_action( 'pre_get_posts', function ( $query ) {
+	if ( is_admin() || ! $query->is_main_query() || ! $query->is_home() ) {
+		return;
+	}
+	$notes_category_id = sayid_notes_category_id();
+	if ( $notes_category_id ) {
+		$query->set( 'category__not_in', array( $notes_category_id ) );
+	}
+} );

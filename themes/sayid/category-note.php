@@ -1,4 +1,10 @@
 <?php
+/**
+ * "یادداشت‌ها" archive — Notes are `post`s in this one fixed-slug category
+ * (see inc/content-types.php's sayid_notes_category_id()), so this is a
+ * plain category archive; WordPress routes /category/note/ here on its
+ * own via the template hierarchy, no custom query needed.
+ */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

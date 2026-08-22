@@ -1,6 +1,7 @@
 <?php
 /**
- * Shared taxonomy across Articles (native `post`), Notes, Lab and Projects.
+ * Shared taxonomy across Articles (native `post`, which Notes are also a
+ * part of — see inc/content-types.php), Lab and Projects.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,7 +12,7 @@ add_action( 'init', 'sayid_register_taxonomies' );
 function sayid_register_taxonomies() {
 	register_taxonomy(
 		'sayid_topic',
-		array( 'post', 'sayid_note', 'sayid_lab', 'sayid_project' ),
+		array( 'post', 'sayid_lab', 'sayid_project' ),
 		array(
 			'labels'            => array(
 				'name'          => __( 'موضوع‌ها', 'sayid' ),
@@ -53,7 +54,7 @@ function sayid_seed_topics() {
 }
 
 /**
- * A `sayid_topic` archive is a cross-content stream (Articles, Notes, Lab,
+ * A `sayid_topic` archive is a cross-content stream (Articles/Notes, Lab,
  * Projects), not just `post`, which is WordPress's default for a taxonomy
  * query.
  */
@@ -62,6 +63,24 @@ add_action( 'pre_get_posts', function ( $query ) {
 		return;
 	}
 	if ( $query->is_tax( 'sayid_topic' ) ) {
-		$query->set( 'post_type', array( 'post', 'sayid_note', 'sayid_lab', 'sayid_project' ) );
+		$query->set( 'post_type', array( 'post', 'sayid_lab', 'sayid_project' ) );
+	}
+} );
+
+/**
+ * "کارها" (sayid_project archive) tab filter: ?sayid_topic=<slug> narrows
+ * the grid to that topic without leaving the page — see
+ * archive-sayid_project.php for the tabs themselves.
+ */
+add_action( 'pre_get_posts', function ( $query ) {
+	if ( is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+	if ( $query->is_post_type_archive( 'sayid_project' ) && ! empty( $_GET['sayid_topic'] ) ) {
+		$query->set( 'tax_query', array( array(
+			'taxonomy' => 'sayid_topic',
+			'field'    => 'slug',
+			'terms'    => sanitize_title( wp_unslash( $_GET['sayid_topic'] ) ),
+		) ) );
 	}
 } );

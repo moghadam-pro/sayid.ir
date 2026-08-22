@@ -36,24 +36,14 @@ function sayid_render_now() {
 					<?php endif; ?>
 				</div>
 				<dl class="now__signals">
-					<?php if ( $now['building'] ) : ?>
-						<div class="now__signal">
-							<dt><?php esc_html_e( 'دارم می‌سازم', 'sayid' ); ?></dt>
-							<dd><?php echo esc_html( $now['building'] ); ?></dd>
-						</div>
-					<?php endif; ?>
-					<?php if ( $now['exploring'] ) : ?>
-						<div class="now__signal">
-							<dt><?php esc_html_e( 'دارم تجربه می‌کنم', 'sayid' ); ?></dt>
-							<dd><?php echo esc_html( $now['exploring'] ); ?></dd>
-						</div>
-					<?php endif; ?>
-					<?php if ( $now['learning'] ) : ?>
-						<div class="now__signal">
-							<dt><?php esc_html_e( 'دارم یاد می‌گیرم', 'sayid' ); ?></dt>
-							<dd><?php echo esc_html( $now['learning'] ); ?></dd>
-						</div>
-					<?php endif; ?>
+					<?php foreach ( array_keys( sayid_now_default_labels() ) as $key ) : ?>
+						<?php if ( $now[ $key ] ) : ?>
+							<div class="now__signal">
+								<dt><?php echo esc_html( $now[ $key . '_label' ] ); ?></dt>
+								<dd><?php echo nl2br( esc_html( $now[ $key ] ) ); // phpcs:ignore ?></dd>
+							</div>
+						<?php endif; ?>
+					<?php endforeach; ?>
 				</dl>
 			</div>
 			<?php if ( $now['updated_at'] ) : ?>
@@ -290,7 +280,7 @@ function sayid_render_notes( $limit = 5 ) {
 					</li>
 				<?php endforeach; ?>
 			</ul>
-			<a class="section__cta" href="<?php echo esc_url( get_post_type_archive_link( 'sayid_note' ) ); ?>">
+			<a class="section__cta" href="<?php echo esc_url( get_category_link( sayid_notes_category_id() ) ); ?>">
 				<?php esc_html_e( 'همه‌ی یادداشت‌ها', 'sayid' ); ?>
 			</a>
 		</div>
@@ -383,7 +373,7 @@ function sayid_render_theme_switch() {
 /** ---------- Related content rail (single templates) ---------- */
 function sayid_render_related( $post_id ) {
 	$related = sayid_get_related( $post_id );
-	$all     = array_merge( $related['notes'], $related['articles'], $related['lab'], $related['projects'] );
+	$all     = array_merge( $related['posts'], $related['lab'], $related['projects'] );
 	if ( empty( $all ) ) {
 		return '';
 	}

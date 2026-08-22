@@ -1,9 +1,17 @@
 <?php
 /**
- * Generic page template — used for About and any other plain editorial
- * page. Content/structure (per brief §44's About direction) is authored
- * directly in the block editor; this template only provides the
- * typographic frame.
+ * Template Name: قالب پست سینگل
+ *
+ * The default page template (used for About and any other plain editorial
+ * page even without explicitly selecting it — see the template hierarchy
+ * note below). Content/structure (per brief §44's About direction) is
+ * authored directly in the block editor; this template only provides the
+ * typographic frame, same as a single Article/Note.
+ *
+ * Naming it explicitly with `Template Name:` makes it selectable by name
+ * in Page Attributes too — WordPress still also falls back to this exact
+ * file automatically for any page with no template chosen, since `page.php`
+ * is the template-hierarchy default; the two roles don't conflict.
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

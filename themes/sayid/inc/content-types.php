@@ -1,8 +1,12 @@
 <?php
 /**
- * Custom post types: Notes, Lab, Projects. Articles use the built-in `post`
- * type, relabeled — see docs/12-plugin-reference.md for the rationale
- * (unchanged by the plugin → theme migration).
+ * Custom post types: Lab, Projects. Articles use the built-in `post` type,
+ * relabeled — see docs/12-plugin-reference.md for the rationale (unchanged
+ * by the plugin → theme migration). Notes used to be a third CPT here too;
+ * since Notes and Articles are editorially the same thing (a `post`, just
+ * shorter), that was a duplicate content model — Notes are now just `post`s
+ * in the "یادداشت" category (see sayid_seed_notes_category() below and
+ * inc/queries.php's sayid_query_latest_notes()).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,29 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action( 'init', 'sayid_register_post_types' );
 function sayid_register_post_types() {
-	register_post_type( 'sayid_note', array(
-		'labels'            => array(
-			'name'          => __( 'یادداشت‌ها', 'sayid' ),
-			'singular_name' => __( 'یادداشت', 'sayid' ),
-			'add_new'       => __( 'یادداشت جدید', 'sayid' ),
-			'add_new_item'  => __( 'افزودن یادداشت جدید', 'sayid' ),
-			'edit_item'     => __( 'ویرایش یادداشت', 'sayid' ),
-			'new_item'      => __( 'یادداشت جدید', 'sayid' ),
-			'view_item'     => __( 'مشاهده یادداشت', 'sayid' ),
-			'search_items'  => __( 'جست‌وجوی یادداشت‌ها', 'sayid' ),
-			'not_found'     => __( 'یادداشتی پیدا نشد', 'sayid' ),
-			'all_items'     => __( 'همه‌ی یادداشت‌ها', 'sayid' ),
-			'menu_name'     => __( 'یادداشت‌ها', 'sayid' ),
-		),
-		'public'            => true,
-		'show_in_rest'      => true,
-		'menu_icon'         => 'dashicons-sticky',
-		'menu_position'     => 21,
-		'supports'          => array( 'title', 'editor', 'author', 'thumbnail', 'revisions', 'custom-fields' ),
-		'has_archive'       => 'notes',
-		'rewrite'           => array( 'slug' => 'note', 'with_front' => false ),
-	) );
-
 	register_post_type( 'sayid_lab', array(
 		'labels'            => array(
 			'name'          => __( 'آزمایشگاه', 'sayid' ),
@@ -93,3 +74,28 @@ add_filter( 'post_type_labels_post', function ( $labels ) {
 	$labels->menu_name     = __( 'نوشته‌ها', 'sayid' );
 	return $labels;
 } );
+
+/**
+ * Notes are `post`s in this one fixed-slug category, seeded once so the
+ * homepage/query side (sayid_notes_category_id()) has a reliable category
+ * to point at without asking anyone to get a slug exactly right by hand —
+ * just tag posts "یادداشت" from the normal category picker.
+ */
+add_action( 'init', function () {
+	if ( get_option( 'sayid_notes_category_seeded' ) ) {
+		return;
+	}
+	if ( ! get_category_by_slug( 'note' ) ) {
+		wp_insert_term( __( 'یادداشت', 'sayid' ), 'category', array( 'slug' => 'note' ) );
+	}
+	update_option( 'sayid_notes_category_seeded', 1 );
+} );
+
+function sayid_notes_category_id() {
+	static $id = null;
+	if ( null === $id ) {
+		$term = get_category_by_slug( 'note' );
+		$id   = $term ? (int) $term->term_id : 0;
+	}
+	return $id;
+}

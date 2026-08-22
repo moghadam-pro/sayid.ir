@@ -1,9 +1,14 @@
 <?php
 /**
- * The homepage Hero — static, hard-coded content matching the reference
- * screenshot (see docs/16-final-implementation-report.md "Theme pivot"
- * section for the full context of this rebuild). Nav lives inside this
- * section so header + hero read as one continuous first-viewport
+ * The homepage Hero — composition (layout, marquee, nav) is fixed in this
+ * template, matching the reference screenshot (see
+ * docs/16-final-implementation-report.md "Theme pivot"). The copy itself
+ * (greeting/name/role/lede/CTA/rotator phrases) is editable without a code
+ * deploy through sayid_home_field() (inc/template-tags.php), which reads
+ * the page assigned page-home-content.php — see that file's docblock.
+ * Every field falls back to the confirmed original copy when that page or
+ * field doesn't exist yet, so this never renders empty. Nav lives inside
+ * this section so header + hero read as one continuous first-viewport
  * composition, per the original brief's Hero direction.
  *
  * The background text is two independent marquee lines moving opposite
@@ -23,6 +28,13 @@ sayid_enqueue_magic_name();
 
 $hero_photo_id = sayid_hero_photo_id();
 $visitor_ip    = sayid_get_visitor_ip();
+
+$hero_greeting    = sayid_home_field( 'sayid_hero_greeting', __( 'سلام ، من', 'sayid' ) );
+$hero_name        = sayid_home_field( 'sayid_hero_name', __( 'سعید مقدم', 'sayid' ) );
+$hero_name_suffix = sayid_home_field( 'sayid_hero_name_suffix', __( 'هستم', 'sayid' ) );
+$hero_role        = sayid_home_field( 'sayid_hero_role', __( 'طراح ارشد محصول', 'sayid' ) );
+$hero_lede        = sayid_home_field( 'sayid_hero_lede', __( 'با بیش از ۱۵ سال تجربه کاری حرفه‌ای، داستان‌های زیادی برای گفتن دارم', 'sayid' ) );
+$hero_cta_label   = sayid_home_field( 'sayid_hero_cta_label', __( 'بزن بریم نمونه کار ببینیم', 'sayid' ) );
 ?>
 <section class="home-hero" data-sayid-hero>
 	<div class="home-hero__marquee" aria-hidden="true" data-hero-marquee>
@@ -67,14 +79,14 @@ $visitor_ip    = sayid_get_visitor_ip();
 		</div>
 
 		<div class="home-hero__content">
-			<p class="home-hero__greeting"><?php esc_html_e( 'سلام ، من', 'sayid' ); ?></p>
+			<p class="home-hero__greeting"><?php echo esc_html( $hero_greeting ); ?></p>
 			<h1 class="home-hero__name">
 				<?php // id="magicalTag": a hidden easter egg — 8 clicks within 2s each redirects to /magic. See assets/js/magic-name.js. Not a real link, so no href/role; the hover color-shift is the only visual hint. ?>
-				<span id="magicalTag"><?php esc_html_e( 'سعید مقدم', 'sayid' ); ?></span>
-				<span class="home-hero__name-suffix"><?php esc_html_e( 'هستم', 'sayid' ); ?></span>
+				<span id="magicalTag"><?php echo esc_html( $hero_name ); ?></span>
+				<span class="home-hero__name-suffix"><?php echo esc_html( $hero_name_suffix ); ?></span>
 			</h1>
-			<p class="home-hero__role home-hero__role--outline"><?php esc_html_e( 'طراح ارشد محصول', 'sayid' ); ?></p>
-			<p class="home-hero__lede"><?php esc_html_e( 'با بیش از ۱۵ سال تجربه کاری حرفه‌ای، داستان‌های زیادی برای گفتن دارم', 'sayid' ); ?></p>
+			<p class="home-hero__role home-hero__role--outline"><?php echo esc_html( $hero_role ); ?></p>
+			<p class="home-hero__lede"><?php echo nl2br( esc_html( $hero_lede ) ); // phpcs:ignore ?></p>
 
 			<div class="home-hero__actions">
 				<?php // Only the phrase currently in view is exposed to assistive tech — the other eleven are visually clipped, so leaving them in the tree would read all twelve as one run-on string. hero-rotator.js moves the aria-hidden as it advances, which is the content change the live region announces. ?>
@@ -86,7 +98,7 @@ $visitor_ip    = sayid_get_visitor_ip();
 					</ul>
 				</div>
 				<a class="btn btn--accent" href="<?php echo esc_url( get_post_type_archive_link( 'sayid_project' ) ); ?>">
-					<?php esc_html_e( 'بزن بریم نمونه کار ببینیم', 'sayid' ); ?>
+					<?php echo esc_html( $hero_cta_label ); ?>
 				</a>
 			</div>
 

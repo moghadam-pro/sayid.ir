@@ -34,15 +34,22 @@ redundant, not additive.
    row (کارها / آزمایشگاه / یادداشت‌ها + icons) and isn't menu-driven, so
    it needs no separate menu.
 8. Optionally: Tools → Import → WordPress → import `demo-content.xml` for
-   one sample of each content type plus empty About/Contact page shells.
-   Every imported item is saved as a **draft**, clearly marked as a sample
-   in its own body text — review, edit, and publish (or delete) each one;
-   nothing in it is real content and nothing publishes automatically.
+   one sample of each content type plus empty About/Contact/Home-content
+   page shells. Every imported item is saved as a **draft**, clearly
+   marked as a sample in its own body text — review, edit, and publish (or
+   delete) each one; nothing in it is real content and nothing publishes
+   automatically.
 9. Create/assign the **تماس** page template (`page-contact.php`) to a
    Contact page if you didn't import it from the demo content — Page
    Attributes → Template → تماس. The form posts to itself and emails
    `i@moghadam.pro` via `wp_mail()`; no third-party form plugin is used.
-10. Dashboard (wp-admin's main screen) → fill in the **این روزها** widget
+10. Optional but recommended: create/assign the **محتوای صفحه‌ی اصلی**
+    template (`page-home-content.php`) to one page (or import it from the
+    demo content) — its meta box is the editable source for the Hero's
+    text (name, role, lede, rotator phrases, CTA label). Skip this
+    entirely and the Hero just keeps using its original hardcoded copy —
+    see "Page templates" below.
+11. Dashboard (wp-admin's main screen) → fill in the **این روزها** widget
     (top-left box). This is the fastest-changing content on the site —
     see inc/now-dashboard-widget.php.
 
@@ -54,6 +61,41 @@ string themselves, so a Jalali calendar plugin (e.g. "Parsi Date"), which
 works by filtering `date_i18n`'s output, converts these to a real Shamsi
 day-month-year automatically once active. Without one, dates still show as
 Gregorian with Persian digits — not a Jalali conversion on its own.
+
+## Notes are a category, not a post type
+
+Notes used to be their own CPT (`sayid_note`); they're now just `post`s
+(the same type Articles use) tagged with the **یادداشت** category, which
+the theme seeds automatically on activation with the fixed slug `note` —
+`sayid_notes_category_id()` (inc/content-types.php) is the one place that
+slug is hardcoded, everything else (the homepage's "یادداشت‌های تازه"
+query, `category-note.php`, footer/nav links) looks it up through that.
+Nothing to configure: tag a post "یادداشت" from the normal category picker
+and it shows up everywhere a Note is expected to.
+
+## Page templates
+
+Beyond the default (`page.php`, "قالب پست سینگل" — title + content, same
+frame as a single Article), Page Attributes → Template offers:
+
+- **قالب فرم** (`page-form.php`) — page title/content, then a
+  name/email/message form. Emails whatever address is set in that page's
+  "تنظیمات فرم" meta box, or the site admin email if left blank. Separate
+  from — and simpler than — the dedicated Contact page
+  (`page-contact.php`), which keeps its own fixed copy and recipient.
+- **قالب آرشیو** (`page-archive.php`) — page title/content as an intro,
+  followed by a paginated list of posts, optionally narrowed to one
+  دسته‌بندی via the "تنظیمات آرشیو" meta box (blank = every post).
+- **قالب خام (بدون هدر و فوتر)** (`page-blank.php`) — no site header or
+  footer, the page's own content rendered raw (not run through
+  `wpautop`), the same role Elementor's "Canvas" template used to serve.
+  Meant for hand-written HTML/CSS/JS (Custom HTML block or the Code
+  editor) that needs to own the whole `<body>`.
+- **محتوای صفحه‌ی اصلی (بدون نمایش)** (`page-home-content.php`) — not a
+  real destination (visiting it just redirects to `/`); assigning it to
+  one page exposes a meta box that becomes the Hero's editable copy
+  source, read through `sayid_home_field()` (inc/template-tags.php). See
+  install step 10 above.
 
 ## Fonts
 
@@ -73,21 +115,22 @@ sayid/
 │   ├── helpers.php         date/reading-time/IP/misc helpers
 │   ├── setup.php           theme supports, nav menu locations, image sizes
 │   ├── enqueue.php         CSS/JS registration + conditional interaction-script enqueue
-│   ├── taxonomies.php      sayid_topic (shared across post/note/lab/project)
-│   ├── content-types.php   sayid_note / sayid_lab / sayid_project CPTs + `post` relabel
-│   ├── meta-fields.php     postmeta registration + native meta boxes
+│   ├── taxonomies.php      sayid_topic (shared across post/lab/project) + Works topic-tab filter
+│   ├── content-types.php   sayid_lab / sayid_project CPTs + `post` relabel + Notes category seed
+│   ├── meta-fields.php     postmeta registration + native meta boxes (posts, lab, projects, and per-template page fields)
 │   ├── relationships.php   related-content read API
 │   ├── now-dashboard-widget.php   "این روزها" as a WP Dashboard widget
 │   ├── queries.php         homepage section queries
 │   ├── render.php          render functions for every homepage section
 │   ├── admin-columns.php   status/featured columns on admin list screens
-│   ├── template-tags.php   nav menus, social links, Contact page lookup
+│   ├── template-tags.php   nav menus, social links, Contact/Home-content page lookup
 │   ├── customizer.php      Hero photo control, Contact phone number
-│   ├── contact-form.php    native contact form handler (no form plugin)
+│   ├── contact-form.php    native contact form handler for the Contact page
+│   ├── form-template.php   native contact form handler for page-form.php (any page)
 │   └── icons.php           inline SVGs: theme-switch icons, social icons
 ├── template-parts/
 │   ├── site-nav.php        logo + role label + theme switch + primary menu
-│   └── hero.php            the Hero itself
+│   └── hero.php            the Hero itself (copy sourced via sayid_home_field())
 ├── assets/
 │   ├── css/                tokens, base, layout, components, hero, interactions
 │   ├── js/                 theme, nav, homepage-entry, lab-pointer, signature-venn, hero-marquee, hero-rotator, magic-name
@@ -95,13 +138,17 @@ sayid/
 ├── header.php / footer.php
 ├── front-page.php           homepage: Hero + deferred sections
 ├── home.php                 Articles index (WP's "Posts page")
-├── single.php                single Article
-├── single-sayid_note.php / archive-sayid_note.php
+├── single.php                single Article or Note (same `post` type)
+├── category-note.php         "یادداشت‌ها" archive
 ├── single-sayid_lab.php / archive-sayid_lab.php
-├── single-sayid_project.php / archive-sayid_project.php
+├── single-sayid_project.php / archive-sayid_project.php (+ topic tabs)
 ├── taxonomy-sayid_topic.php
-├── page.php                  generic page (About uses this, unmodified)
-├── page-contact.php          Contact page template
+├── page.php                  "قالب پست سینگل" — default Page template (About uses this)
+├── page-contact.php          "تماس" — fixed-copy Contact page
+├── page-form.php              "قالب فرم" — reusable form page
+├── page-archive.php           "قالب آرشیو" — post list page
+├── page-blank.php              "قالب خام" — no header/footer, raw content
+├── page-home-content.php       Hero content source (not a real destination)
 ├── 404.php / index.php
 └── demo-content.xml           one-click sample content (WXR)
 ```
@@ -111,8 +158,12 @@ sayid/
 Per the explicit direction for this rebuild:
 
 - **Static** (hard-coded in the template, edited by changing code): the
-  Hero's copy and composition (`template-parts/hero.php`) — everything
-  except the portrait photo itself, which has its own Customizer control.
+  Hero's *composition* — layout, marquee, nav placement
+  (`template-parts/hero.php`).
+- **Editable without a deploy, but not query-driven**: the Hero's *copy*
+  (greeting/name/role/lede/CTA/rotator phrases) and the portrait photo —
+  see "Page templates" above and the Customizer, respectively. Both fall
+  back to the original confirmed copy/placeholder until touched.
 - **Dynamic** (query-driven from WordPress content, per `inc/render.php`):
   Now, Selected Work, Lab, Latest Notes, Featured Article. None of these
   are ever manually duplicated in a template — publishing content is the
@@ -126,6 +177,17 @@ Appearance → Themes shows exactly which point in this history is
 installed — compare it against the entries below to tell whether the
 site is running the latest commit on git.
 
+- **1.3.0** — This-Roozha widget: the three signal titles ("دارم
+  می‌سازم" etc.) are now editable text, blank falls back to the original
+  wording; their content is a textarea (multi-line). Notes are no longer a
+  separate CPT — they're `post`s tagged "یادداشت" (auto-seeded category),
+  excluded from the Articles rail/index so the two streams stay disjoint.
+  "کارها" gained topic-filter tabs. The Hero's copy (name/role/lede/CTA/
+  rotator phrases) is now editable through a WordPress Page's custom
+  fields (see "Page templates"), instead of being hardcoded. Added four
+  selectable Page templates: قالب پست سینگل (default), قالب فرم (reusable
+  contact-style form), قالب آرشیو (post list, optional category filter),
+  قالب خام (no header/footer, raw content — like Elementor's Canvas).
 - **1.2.0** — Hero: restored the hidden click-8-times easter egg on the
   name ("سعید مقدم", `#magicalTag`) — a canvas firework burst then a
   redirect to `/magic`, ported over from the retired plugin build

@@ -15,17 +15,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 const SAYID_NOW_OPTION = 'sayid_now';
 
+/**
+ * The three signal titles ("دارم می‌سازم" etc.) are editable, but a blank
+ * one falls back to this rather than rendering an empty <dt> — so leaving
+ * the label field untouched keeps today's wording without the widget ever
+ * shipping an unlabeled row.
+ */
+function sayid_now_default_labels() {
+	return array(
+		'building'  => __( 'دارم می‌سازم', 'sayid' ),
+		'exploring' => __( 'دارم تجربه می‌کنم', 'sayid' ),
+		'learning'  => __( 'دارم یاد می‌گیرم', 'sayid' ),
+	);
+}
+
 function sayid_get_now() {
 	$defaults = array(
-		'statement'  => '',
-		'building'   => '',
-		'exploring'  => '',
-		'learning'   => '',
-		'link_label' => '',
-		'link_url'   => '',
-		'updated_at' => 0,
+		'statement'       => '',
+		'building_label'  => '',
+		'building'        => '',
+		'exploring_label' => '',
+		'exploring'       => '',
+		'learning_label'  => '',
+		'learning'        => '',
+		'link_label'      => '',
+		'link_url'        => '',
+		'updated_at'      => 0,
 	);
-	return wp_parse_args( get_option( SAYID_NOW_OPTION, array() ), $defaults );
+	$now = wp_parse_args( get_option( SAYID_NOW_OPTION, array() ), $defaults );
+	foreach ( sayid_now_default_labels() as $key => $label ) {
+		if ( '' === $now[ $key . '_label' ] ) {
+			$now[ $key . '_label' ] = $label;
+		}
+	}
+	return $now;
 }
 
 add_action( 'wp_dashboard_setup', function () {
@@ -64,18 +87,13 @@ function sayid_render_now_dashboard_widget() {
 			<label for="sayid_now_statement"><strong><?php esc_html_e( 'جمله‌ی اصلی', 'sayid' ); ?></strong></label>
 			<textarea name="statement" id="sayid_now_statement" rows="5" style="width:100%"><?php echo esc_textarea( $now['statement'] ); ?></textarea>
 		</p>
-		<p>
-			<label for="sayid_now_building"><strong><?php esc_html_e( 'دارم می‌سازم', 'sayid' ); ?></strong></label>
-			<input type="text" name="building" id="sayid_now_building" value="<?php echo esc_attr( $now['building'] ); ?>" style="width:100%">
-		</p>
-		<p>
-			<label for="sayid_now_exploring"><strong><?php esc_html_e( 'دارم تجربه می‌کنم', 'sayid' ); ?></strong></label>
-			<input type="text" name="exploring" id="sayid_now_exploring" value="<?php echo esc_attr( $now['exploring'] ); ?>" style="width:100%">
-		</p>
-		<p>
-			<label for="sayid_now_learning"><strong><?php esc_html_e( 'دارم یاد می‌گیرم', 'sayid' ); ?></strong></label>
-			<input type="text" name="learning" id="sayid_now_learning" value="<?php echo esc_attr( $now['learning'] ); ?>" style="width:100%">
-		</p>
+		<?php foreach ( sayid_now_default_labels() as $key => $default_label ) : ?>
+			<p>
+				<label for="sayid_now_<?php echo esc_attr( $key ); ?>_label"><strong><?php esc_html_e( 'عنوان', 'sayid' ); ?></strong></label>
+				<input type="text" name="<?php echo esc_attr( $key ); ?>_label" id="sayid_now_<?php echo esc_attr( $key ); ?>_label" value="<?php echo esc_attr( $now[ $key . '_label' ] ); ?>" placeholder="<?php echo esc_attr( $default_label ); ?>" style="width:100%">
+				<textarea name="<?php echo esc_attr( $key ); ?>" id="sayid_now_<?php echo esc_attr( $key ); ?>" rows="2" style="width:100%; margin-top:4px;"><?php echo esc_textarea( $now[ $key ] ); ?></textarea>
+			</p>
+		<?php endforeach; ?>
 		<p style="display:flex; gap:8px;">
 			<input type="text" name="link_label" placeholder="<?php esc_attr_e( 'عنوان لینک (اختیاری)', 'sayid' ); ?>" value="<?php echo esc_attr( $now['link_label'] ); ?>" style="flex:1">
 			<input type="url" name="link_url" placeholder="https://" value="<?php echo esc_attr( $now['link_url'] ); ?>" style="flex:1">
@@ -97,15 +115,18 @@ add_action( 'admin_post_sayid_save_now', function () {
 		wp_die( esc_html__( 'دسترسی نامعتبر است.', 'sayid' ) );
 	}
 
-	update_option( SAYID_NOW_OPTION, array(
+	$data = array(
 		'statement'  => sanitize_textarea_field( wp_unslash( $_POST['statement'] ?? '' ) ),
-		'building'   => sanitize_text_field( wp_unslash( $_POST['building'] ?? '' ) ),
-		'exploring'  => sanitize_text_field( wp_unslash( $_POST['exploring'] ?? '' ) ),
-		'learning'   => sanitize_text_field( wp_unslash( $_POST['learning'] ?? '' ) ),
 		'link_label' => sanitize_text_field( wp_unslash( $_POST['link_label'] ?? '' ) ),
 		'link_url'   => esc_url_raw( wp_unslash( $_POST['link_url'] ?? '' ) ),
 		'updated_at' => time(),
-	) );
+	);
+	foreach ( array_keys( sayid_now_default_labels() ) as $key ) {
+		$data[ $key . '_label' ] = sanitize_text_field( wp_unslash( $_POST[ $key . '_label' ] ?? '' ) );
+		$data[ $key ]            = sanitize_textarea_field( wp_unslash( $_POST[ $key ] ?? '' ) );
+	}
+
+	update_option( SAYID_NOW_OPTION, $data );
 
 	wp_safe_redirect( add_query_arg( 'sayid_now_updated', '1', admin_url( 'index.php' ) ) );
 	exit;

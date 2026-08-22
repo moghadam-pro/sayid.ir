@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SAYID_THEME_VERSION', '1.2.0' ); // Keep in sync with style.css's "Version:" header — see README's Changelog.
+define( 'SAYID_THEME_VERSION', '1.3.0' ); // Keep in sync with style.css's "Version:" header — see README's Changelog.
 define( 'SAYID_THEME_DIR', get_template_directory() );
 define( 'SAYID_THEME_URI', get_template_directory_uri() );
 
@@ -32,3 +32,4 @@ require_once SAYID_THEME_DIR . '/inc/template-tags.php';
 require_once SAYID_THEME_DIR . '/inc/icons.php';
 require_once SAYID_THEME_DIR . '/inc/customizer.php';
 require_once SAYID_THEME_DIR . '/inc/contact-form.php';
+require_once SAYID_THEME_DIR . '/inc/form-template.php';
