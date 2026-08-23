@@ -6,6 +6,7 @@ get_header();
 ?>
 <main class="section connect">
 	<div class="site-container connect">
+		<img decoding="async" src="https://sayid.ir/wp-content/uploads/2025/10/404.svg" alt="Sayid.ir-404" class="">
 		<h1 class="connect__title"><?php esc_html_e( 'این صفحه پیدا نشد.', 'sayid' ); ?></h1>
 		<p class="connect__support"><?php esc_html_e( 'شاید لینک اشتباه بوده یا صفحه جابه‌جا شده.', 'sayid' ); ?></p>
 		<div class="connect__actions">
