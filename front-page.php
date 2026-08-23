@@ -13,9 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 
 sayid_enqueue_homepage_entry();
+?>
+<main>
+	<?php
+	get_template_part( 'template-parts/hero' );
 
-get_template_part( 'template-parts/hero' );
-
-echo '<div id="homepage-deferred-root">' . sayid_render_homepage_sections() . '</div>'; // phpcs:ignore
-
+	echo '<div id="homepage-deferred-root">' . sayid_render_homepage_sections() . '</div>'; // phpcs:ignore
+	?>
+</main>
+<?php
 get_footer();

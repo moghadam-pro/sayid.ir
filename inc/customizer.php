@@ -76,7 +76,7 @@ add_action( 'customize_register', function ( $wp_customize ) {
 		'type'    => 'textarea',
 	) );
 	$wp_customize->add_setting( 'sayid_lab_count', array(
-		'default'           => 4,
+		'default'           => 6,
 		'sanitize_callback' => 'absint',
 	) );
 	$wp_customize->add_control( 'sayid_lab_count', array(
@@ -133,6 +133,31 @@ add_action( 'customize_register', function ( $wp_customize ) {
 		'type'    => 'checkbox',
 	) );
 
+	/** ---------- Notes ("یادداشت‌های تازه") ---------- */
+	$wp_customize->add_section( 'sayid_notes_section', array(
+		'title'    => __( 'بخش یادداشت‌های تازه', 'sayid' ),
+		'priority' => 34,
+	) );
+	$wp_customize->add_setting( 'sayid_notes_enabled', array(
+		'default'           => true,
+		'sanitize_callback' => 'sayid_sanitize_checkbox',
+	) );
+	$wp_customize->add_control( 'sayid_notes_enabled', array(
+		'label'   => __( 'نمایش این بخش در صفحه‌ی اصلی', 'sayid' ),
+		'section' => 'sayid_notes_section',
+		'type'    => 'checkbox',
+	) );
+	$wp_customize->add_setting( 'sayid_notes_count', array(
+		'default'           => 5,
+		'sanitize_callback' => 'absint',
+	) );
+	$wp_customize->add_control( 'sayid_notes_count', array(
+		'label'       => __( 'تعداد نمایش', 'sayid' ),
+		'section'     => 'sayid_notes_section',
+		'type'        => 'number',
+		'input_attrs' => array( 'min' => 1, 'max' => 20 ),
+	) );
+
 	/** ---------- Connect ("حرف بزنیم") ---------- */
 	$wp_customize->add_section( 'sayid_connect_section', array(
 		'title'    => __( 'بخش حرف بزنیم', 'sayid' ),
@@ -182,7 +207,85 @@ add_action( 'customize_register', function ( $wp_customize ) {
 		'section'     => 'sayid_contact',
 		'type'        => 'text',
 	) );
+
+	/** ---------- Header ---------- */
+	$wp_customize->add_section( 'sayid_header_section', array(
+		'title'       => __( 'هدر', 'sayid' ),
+		'priority'    => 37,
+		'description' => __( 'منوی هدر از Appearance → Menus (یا همین Customizer → Menus) انتخاب می‌شه.', 'sayid' ),
+	) );
+	$wp_customize->add_setting( 'sayid_header_role_label', array(
+		'default'           => '',
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'sayid_header_role_label', array(
+		'label'   => __( 'برچسب عنوان شغلی کنار لوگو', 'sayid' ),
+		'section' => 'sayid_header_section',
+		'type'    => 'text',
+	) );
+	$header_elements = array(
+		'sayid_header_order_nav'    => __( 'ترتیب منوی اصلی', 'sayid' ),
+		'sayid_header_order_mark'   => __( 'ترتیب لوگو', 'sayid' ),
+		'sayid_header_order_switch' => __( 'ترتیب کلید تغییر تم', 'sayid' ),
+	);
+	$header_defaults = array(
+		'sayid_header_order_nav'    => '1',
+		'sayid_header_order_mark'   => '2',
+		'sayid_header_order_switch' => '3',
+	);
+	foreach ( $header_elements as $key => $label ) {
+		$wp_customize->add_setting( $key, array(
+			'default'           => $header_defaults[ $key ],
+			'sanitize_callback' => 'sayid_sanitize_order',
+		) );
+		$wp_customize->add_control( $key, array(
+			'label'   => $label,
+			'section' => 'sayid_header_section',
+			'type'    => 'select',
+			'choices' => array( '1' => '1', '2' => '2', '3' => '3' ),
+		) );
+	}
+
+	/** ---------- Footer ---------- */
+	$wp_customize->add_section( 'sayid_footer_section', array(
+		'title'    => __( 'فوتر', 'sayid' ),
+		'priority' => 38,
+	) );
+	$wp_customize->add_setting( 'sayid_footer_copyright', array(
+		'default'           => '',
+		'sanitize_callback' => 'sanitize_textarea_field',
+	) );
+	$wp_customize->add_control( 'sayid_footer_copyright', array(
+		'label'   => __( 'متن پایین فوتر', 'sayid' ),
+		'section' => 'sayid_footer_section',
+		'type'    => 'textarea',
+	) );
+	$footer_elements = array(
+		'sayid_footer_order_links'  => __( 'ترتیب لینک‌ها', 'sayid' ),
+		'sayid_footer_order_social' => __( 'ترتیب آیکن‌های سوشال', 'sayid' ),
+	);
+	$footer_defaults = array(
+		'sayid_footer_order_links'  => '1',
+		'sayid_footer_order_social' => '2',
+	);
+	foreach ( $footer_elements as $key => $label ) {
+		$wp_customize->add_setting( $key, array(
+			'default'           => $footer_defaults[ $key ],
+			'sanitize_callback' => 'sayid_sanitize_order',
+		) );
+		$wp_customize->add_control( $key, array(
+			'label'   => $label,
+			'section' => 'sayid_footer_section',
+			'type'    => 'select',
+			'choices' => array( '1' => '1', '2' => '2' ),
+		) );
+	}
 } );
+
+function sayid_sanitize_order( $value ) {
+	$n = absint( $value );
+	return $n ? (string) $n : '1';
+}
 
 /**
  * Attachment ID of the Hero photo, or 0 if not set yet — callers fall back

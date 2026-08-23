@@ -50,6 +50,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_register_script( 'sayid-hero-marquee', SAYID_THEME_URI . '/assets/js/hero-marquee.js', array(), $ver, true );
 	wp_register_script( 'sayid-hero-rotator', SAYID_THEME_URI . '/assets/js/hero-rotator.js', array(), $ver, true );
 	wp_register_script( 'sayid-magic-name', SAYID_THEME_URI . '/assets/js/magic-name.js', array(), $ver, true );
+	wp_register_script( 'sayid-note-row-typewriter', SAYID_THEME_URI . '/assets/js/note-row-typewriter.js', array(), $ver, true );
 } );
 
 function sayid_enqueue_homepage_entry() { wp_enqueue_script( 'sayid-homepage-entry' ); }
@@ -58,3 +59,4 @@ function sayid_enqueue_signature_venn() { wp_enqueue_script( 'sayid-signature-ve
 function sayid_enqueue_hero_marquee() { wp_enqueue_script( 'sayid-hero-marquee' ); }
 function sayid_enqueue_hero_rotator() { wp_enqueue_script( 'sayid-hero-rotator' ); }
 function sayid_enqueue_magic_name() { wp_enqueue_script( 'sayid-magic-name' ); }
+function sayid_enqueue_note_row_typewriter() { wp_enqueue_script( 'sayid-note-row-typewriter' ); }

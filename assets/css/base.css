@@ -44,6 +44,30 @@ body {
   background: var(--color-bg);
   transition: background-color var(--motion-normal) var(--ease-out),
               color var(--motion-normal) var(--ease-out);
+
+  /* Sticky footer: body is at least one viewport tall (never more, unless
+     content genuinely needs it — min-height is a floor, not a fixed
+     height, so this never forces scroll on a normal-length page), and the
+     one <main> that's always a direct child of body absorbs any leftover
+     space, pushing .site-footer down to the bottom instead of leaving it
+     stranded right under a short page's content. */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body > main {
+  flex: 1 0 auto;
+}
+
+/* page-blank.php ("قالب خام") has no header/footer and no <main> of ours —
+   its whole point is that the theme doesn't touch the body at all, so the
+   sticky-footer flex context above (which that template has no footer to
+   need anyway) is turned back off here. */
+.sayid-blank-page {
+  display: block;
+  min-height: 0;
 }
 
 img,

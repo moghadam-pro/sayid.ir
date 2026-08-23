@@ -74,9 +74,18 @@ directly, alongside WordPress's own site-identity controls:
 
 - **Hero** — photo, greeting, name, name suffix, role, lede, CTA button
   label, and the rotating headline's phrases (one per line).
+- **Header** — the role label next to the logo, and a numeric order field
+  for each of the three header elements (primary menu, logo mark, theme
+  switch), so their left-to-right position can be rearranged without
+  touching code.
+- **Footer** — the copyright line, and a numeric order field for each of
+  the footer's two groups (footer links, social icons). The footer links
+  themselves come from a dedicated "منوی فوتر" nav menu location
+  (Appearance → Menus), the same way the primary menu already works.
 - **Lab section** — title, description, and how many items to show.
 - **Signature section** — a visibility toggle, plus the eyebrow, title,
   and main sentence.
+- **Notes section** — a visibility toggle and how many notes to show.
 - **Articles section** — a visibility toggle.
 - **Connect section** — title, subtitle, description, and both buttons'
   label and link.
@@ -86,6 +95,23 @@ directly, alongside WordPress's own site-identity controls:
 Every field falls back to the theme's original copy when left blank, and
 the "Now" panel is intentionally not here — it has its own dedicated
 Dashboard widget instead (see above).
+
+## SEO
+
+The theme emits its own meta description, Open Graph, Twitter Card, and
+JSON-LD structured data (`Person` on the homepage, `Article` on single
+posts) only when no dedicated SEO plugin is active. If RankMath, Yoast, or
+All in One SEO is detected (by its version constant), the theme steps
+aside entirely and lets the plugin own that output, avoiding duplicate or
+conflicting tags — this also means the theme is compatible with RankMath
+out of the box, with no extra setup required. `add_theme_support(
+'title-tag' )` already lets any SEO plugin fully own the `<title>` tag.
+None of this runs on the blank page template ("قالب خام"), which is a
+deliberately untouched raw canvas. RankMath's own on-page analysis,
+sitemaps, redirects, and schema all run in local PHP with no outbound
+requests, so they work normally even on a server with no outbound
+internet access — only features that need the *server itself* to call
+out (e.g. Search Console/Analytics auto-sync) would be affected by that.
 
 ## Design system
 
@@ -119,12 +145,13 @@ inc/
   contact-form.php         the dedicated Contact page's form handler
   form-template.php        the reusable form template's form handler
   icons.php                inline SVG icons
+  seo.php                  meta/OG/Twitter/JSON-LD fallbacks (see "SEO" above)
 template-parts/
   site-nav.php             logo, role label, theme switch, primary menu
   hero.php                 the Hero itself
 assets/
   css/                     tokens, base, layout, components, hero, interactions
-  js/                      per-section interaction scripts
+  js/                      per-section interaction scripts (incl. the note-row hover typewriter)
   fonts/                   primary typeface goes here (not bundled)
 header.php / footer.php
 front-page.php              homepage
@@ -147,6 +174,27 @@ demo-content.xml               sample content (WXR)
 The theme's version header (`style.css`) and the matching constant in
 `functions.php` are bumped together with every shipped change.
 
+- **1.5.0** — SEO: the theme now emits meta description, Open Graph,
+  Twitter Card, and JSON-LD structured data on its own, stepping aside
+  automatically when RankMath/Yoast/AIOSEO is active (see "SEO" above).
+  Header/footer: Appearance → Customize gained "هدر" and "فوتر" sections
+  with a numeric order field per element, plus a real "منوی فوتر" nav
+  menu location so the footer's links are menu-driven like the primary
+  menu. Notes: gained a Customizer visibility toggle and item-count
+  field; hovering a note row now types out a one-line excerpt beside the
+  title, and its "همه‌ی یادداشت‌ها" link moved up beside the section
+  heading (matching the same move already made for Articles' "همه‌ی
+  نوشته‌ها" link). Lab section: cards are smaller (a uniform 3×2 grid of
+  6, up from 4) with correspondingly smaller card type. Hero: the lede
+  text is smaller, the rotating-phrase chip lost its padding and corner
+  radius, and hovering a social link now grows and highlights its
+  underline mark in place instead of shifting the other links. Layout: a
+  short/empty page's footer now always sticks to the bottom of the
+  viewport instead of riding up under the content. Dashboard: the
+  "پروژه‌ها" custom post type was relabeled "نمونه‌کارها" throughout the
+  admin, matching the "کارها" wording already used on the front end —
+  its add/edit screen, shared topic taxonomy, and single template were
+  already in place.
 - **1.4.0** — Moved homepage content editing to Appearance → Customize.
   The Hero's copy (already editable via a Page meta box) moved there, and
   gained company: the Lab section's title/description/item count, the

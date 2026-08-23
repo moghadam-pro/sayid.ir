@@ -138,6 +138,16 @@
   width: 1px;
   height: 64px;
   background: var(--color-border-strong);
+  transform-origin: bottom; /* grows upward, away from the link list below it */
+  transition: transform var(--motion-normal) var(--ease-out), background-color var(--motion-normal) var(--ease-out);
+}
+
+/* Hovering any link in the list (not the line itself) doubles the line and
+   turns it yellow — transform (not height) so the links never shift. */
+.home-hero__social:has(a:hover) .home-hero__social-line,
+.home-hero__social:has(a:focus-visible) .home-hero__social-line {
+  transform: scaleY(2);
+  background: var(--color-yellow);
 }
 
 .home-hero__social ul {
@@ -242,7 +252,7 @@
   margin-top: var(--space-4);
   max-width: 34ch;
   color: var(--color-text-muted);
-  font-size: var(--text-large);
+  font-size: .875rem; /* 14px, was var(--text-large) (18px) */
 }
 
 .home-hero__actions {
@@ -261,7 +271,7 @@
 .home-hero__rotator {
   overflow: hidden;
   max-height: 3.2em; /* pre-JS fallback; hero-rotator.js sets the exact px height */
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: #1b1d29;
 }
 
@@ -275,7 +285,7 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
-  padding: var(--space-3) var(--space-8);
+  padding: 0;
   color: #fff;
   font-weight: 500;
 }

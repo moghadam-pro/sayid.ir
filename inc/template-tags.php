@@ -118,3 +118,24 @@ function sayid_primary_nav() {
 	<?php
 }
 
+function sayid_footer_nav() {
+	if ( has_nav_menu( 'footer' ) ) {
+		wp_nav_menu( array(
+			'theme_location' => 'footer',
+			'container'      => false,
+			'menu_class'     => 'footer-links__list',
+			'depth'          => 1,
+		) );
+		return;
+	}
+	// Fallback so the footer never renders empty before a menu is assigned
+	// in Appearance → Menus.
+	?>
+	<ul class="footer-links__list">
+		<li><a href="<?php echo esc_url( get_post_type_archive_link( 'sayid_project' ) ); ?>"><?php esc_html_e( 'کارها', 'sayid' ); ?></a></li>
+		<li><a href="<?php echo esc_url( get_post_type_archive_link( 'sayid_lab' ) ); ?>"><?php esc_html_e( 'آزمایشگاه', 'sayid' ); ?></a></li>
+		<li><a href="<?php echo esc_url( get_category_link( sayid_notes_category_id() ) ); ?>"><?php esc_html_e( 'یادداشت‌ها', 'sayid' ); ?></a></li>
+	</ul>
+	<?php
+}
+

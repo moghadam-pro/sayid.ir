@@ -115,7 +115,7 @@ function sayid_render_project_card( $project, $featured = false ) {
 
 /** ---------- Lab ---------- */
 function sayid_render_lab() {
-	$count = max( 1, (int) get_theme_mod( 'sayid_lab_count', 4 ) );
+	$count = max( 1, (int) get_theme_mod( 'sayid_lab_count', 6 ) );
 	$items = sayid_query_lab_items( $count );
 	if ( empty( $items ) ) {
 		return '';
@@ -132,8 +132,9 @@ function sayid_render_lab() {
 				<p class="section__lede"><?php echo esc_html( $description ); ?></p>
 			</div>
 			<div class="lab-grid">
-				<?php foreach ( $items as $i => $item ) : ?>
-					<?php sayid_render_lab_card( $item, 0 === $i ); ?>
+				<?php foreach ( $items as $item ) : ?>
+					<?php // No "primary" (bento) card here — this grid is a uniform 3x2, per the homepage design. ?>
+					<?php sayid_render_lab_card( $item ); ?>
 				<?php endforeach; ?>
 			</div>
 		</div>
@@ -142,7 +143,7 @@ function sayid_render_lab() {
 	return ob_get_clean();
 }
 
-function sayid_render_lab_card( $item, $primary = false ) {
+function sayid_render_lab_card( $item ) {
 	$status       = get_post_meta( $item->ID, 'sayid_status', true );
 	$status_label = sayid_lab_status_label( $status );
 	$short_desc   = get_post_meta( $item->ID, 'sayid_short_description', true );
@@ -151,7 +152,7 @@ function sayid_render_lab_card( $item, $primary = false ) {
 	$href         = $live_url ? $live_url : ( $repo_url ? $repo_url : get_permalink( $item ) );
 	$external     = ( $href === $live_url || $href === $repo_url );
 	?>
-	<article class="lab-card <?php echo $primary ? 'lab-card--primary' : ''; ?>" data-lab-card>
+	<article class="lab-card" data-lab-card>
 		<span class="lab-card__border" aria-hidden="true"></span>
 		<a class="lab-card__link" href="<?php echo esc_url( $href ); ?>" <?php echo $external ? 'target="_blank" rel="noopener"' : ''; ?>>
 			<div class="lab-card__body">
@@ -260,27 +261,48 @@ function sayid_render_signature() {
 }
 
 /** ---------- Latest Notes ---------- */
-function sayid_render_notes( $limit = 5 ) {
+function sayid_render_notes( $limit = 0 ) {
+	if ( ! get_theme_mod( 'sayid_notes_enabled', true ) ) {
+		return '';
+	}
+	$limit = $limit ? $limit : max( 1, (int) get_theme_mod( 'sayid_notes_count', 5 ) );
 	$notes = sayid_query_latest_notes( $limit );
 	if ( empty( $notes ) ) {
 		return '';
 	}
+	sayid_enqueue_note_row_typewriter();
 	ob_start();
 	?>
 	<section class="section section--notes" id="notes" data-sayid-notes>
 		<div class="site-container">
-			<h2 class="section__title"><?php esc_html_e( 'یادداشت‌های تازه', 'sayid' ); ?></h2>
+			<div class="section__intro section__intro--row">
+				<h2 class="section__title"><?php esc_html_e( 'یادداشت‌های تازه', 'sayid' ); ?></h2>
+				<a class="section__cta section__cta--inline" href="<?php echo esc_url( get_category_link( sayid_notes_category_id() ) ); ?>">
+					<?php esc_html_e( 'همه‌ی یادداشت‌ها', 'sayid' ); ?>
+				</a>
+			</div>
 			<ul class="note-list">
 				<?php foreach ( $notes as $note ) :
-					$terms = get_the_terms( $note->ID, 'sayid_topic' );
-					$tag   = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->name : '';
+					$terms   = get_the_terms( $note->ID, 'sayid_topic' );
+					$tag     = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->name : '';
+					// Plain-text snippet for the hover "typing" reveal — CSS
+					// clips it to one line, but there's no point typing out
+					// more characters than could ever fit on one, so this
+					// stays generously short rather than dumping the whole
+					// post body into the markup.
+					$excerpt = mb_substr( wp_strip_all_tags( $note->post_content ), 0, 200 );
 					?>
 					<li class="note-row">
 						<a class="note-row__link" href="<?php echo esc_url( get_permalink( $note ) ); ?>">
 							<time class="note-row__date" datetime="<?php echo esc_attr( get_the_date( 'c', $note ) ); ?>">
 								<?php echo esc_html( sayid_format_date_short( get_the_time( 'U', $note ) ) ); ?>
 							</time>
-							<span class="note-row__title"><?php echo esc_html( get_the_title( $note ) ); ?></span>
+							<span class="note-row__title-group">
+								<span class="note-row__title"><?php echo esc_html( get_the_title( $note ) ); ?></span>
+								<?php if ( $excerpt ) : ?>
+									<span class="note-row__excerpt" data-note-excerpt="<?php echo esc_attr( $excerpt ); ?>"></span>
+								<?php endif; ?>
+							</span>
 							<?php if ( $tag ) : ?>
 								<span class="note-row__tag"><?php echo esc_html( $tag ); ?></span>
 							<?php endif; ?>
@@ -288,9 +310,6 @@ function sayid_render_notes( $limit = 5 ) {
 					</li>
 				<?php endforeach; ?>
 			</ul>
-			<a class="section__cta" href="<?php echo esc_url( get_category_link( sayid_notes_category_id() ) ); ?>">
-				<?php esc_html_e( 'همه‌ی یادداشت‌ها', 'sayid' ); ?>
-			</a>
 		</div>
 	</section>
 	<?php
@@ -310,8 +329,14 @@ function sayid_render_articles( $limit = 3 ) {
 	?>
 	<section class="section section--article" id="article" data-sayid-article>
 		<div class="site-container">
-			<div class="section__intro">
+			<div class="section__intro section__intro--row">
 				<h2 class="section__title"><?php esc_html_e( 'نوشته‌ها', 'sayid' ); ?></h2>
+				<?php $archive = sayid_articles_archive_url(); ?>
+				<?php if ( $archive ) : ?>
+					<a class="section__cta section__cta--inline" href="<?php echo esc_url( $archive ); ?>">
+						<?php esc_html_e( 'همه‌ی نوشته‌ها', 'sayid' ); ?>
+					</a>
+				<?php endif; ?>
 			</div>
 			<div class="article-grid">
 				<?php foreach ( $articles as $article ) :
@@ -337,12 +362,6 @@ function sayid_render_articles( $limit = 3 ) {
 					</article>
 				<?php endforeach; ?>
 			</div>
-			<?php $archive = sayid_articles_archive_url(); ?>
-			<?php if ( $archive ) : ?>
-				<a class="section__cta" href="<?php echo esc_url( $archive ); ?>">
-					<?php esc_html_e( 'همه‌ی نوشته‌ها', 'sayid' ); ?>
-				</a>
-			<?php endif; ?>
 		</div>
 	</section>
 	<?php

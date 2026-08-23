@@ -2,19 +2,24 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$copyright = sayid_theme_text( 'sayid_footer_copyright', __( 'هرگونه کپی‌برداری از این وبسایت آزاد می‌باشد. ساخته شده و بعضی وقت‌ها هم خراب شده با ❤️', 'sayid' ) );
+
+// Order is set from Appearance → Customize → فوتر — .footer-links-group
+// is already a flex container with these two as direct children.
+$order_links  = (int) get_theme_mod( 'sayid_footer_order_links', 1 );
+$order_social = (int) get_theme_mod( 'sayid_footer_order_social', 2 );
 ?>
 <footer class="site-footer">
 	<div class="site-container footer-row">
-		<p class="footer-signature"><?php esc_html_e( 'هرگونه کپی‌برداری از این وبسایت آزاد می‌باشد. ساخته شده و بعضی وقت‌ها هم خراب شده با ❤️', 'sayid' ); ?></p>
+		<p class="footer-signature"><?php echo esc_html( $copyright ); ?></p>
 
 		<div class="footer-links-group">
-			<nav class="footer-links" aria-label="<?php esc_attr_e( 'ناوبری فوتر', 'sayid' ); ?>">
-				<a href="<?php echo esc_url( get_post_type_archive_link( 'sayid_project' ) ); ?>"><?php esc_html_e( 'کارها', 'sayid' ); ?></a>
-				<a href="<?php echo esc_url( get_post_type_archive_link( 'sayid_lab' ) ); ?>"><?php esc_html_e( 'آزمایشگاه', 'sayid' ); ?></a>
-				<a href="<?php echo esc_url( get_category_link( sayid_notes_category_id() ) ); ?>"><?php esc_html_e( 'یادداشت‌ها', 'sayid' ); ?></a>
+			<nav class="footer-links" aria-label="<?php esc_attr_e( 'ناوبری فوتر', 'sayid' ); ?>" style="order: <?php echo esc_attr( $order_links ); ?>">
+				<?php sayid_footer_nav(); ?>
 			</nav>
 
-			<ul class="footer-icons__social">
+			<ul class="footer-icons__social" style="order: <?php echo esc_attr( $order_social ); ?>">
 				<?php foreach ( sayid_social_links() as $key => $link ) : ?>
 					<li>
 						<a href="<?php echo esc_url( $link['url'] ); ?>" target="_blank" rel="noopener" aria-label="<?php echo esc_attr( $link['label'] ); ?>" title="<?php echo esc_attr( $link['label'] ); ?>">
