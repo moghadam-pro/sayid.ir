@@ -174,6 +174,10 @@ demo-content.xml               sample content (WXR)
 The theme's version header (`style.css`) and the matching constant in
 `functions.php` are bumped together with every shipped change.
 
+- **1.6.0** — «این روزها» gained a media field (image, uploaded video, or
+  a YouTube/Vimeo/other video link) in the dashboard widget. The Signature
+  section gained the «پرامپت‌نویس» mini-game. Removed the homepage Lab
+  card-body padding/gap override.
 - **1.5.0** — SEO: the theme now emits meta description, Open Graph,
   Twitter Card, and JSON-LD structured data on its own, stepping aside
   automatically when RankMath/Yoast/AIOSEO is active (see "SEO" above).
