@@ -176,6 +176,7 @@ function sayid_render_signature() {
 		return '';
 	}
 	sayid_enqueue_signature_venn();
+	sayid_enqueue_signature_prompt();
 
 	$eyebrow          = sayid_theme_text( 'sayid_signature_eyebrow', __( 'طرز فکر', 'sayid' ) );
 	$title            = sayid_theme_text( 'sayid_signature_title', __( 'طراحی × کد × هوش مصنوعی', 'sayid' ) );
@@ -256,7 +257,93 @@ function sayid_render_signature() {
 				<?php echo wp_json_encode( array( 'default' => $default_message, 'zones' => $zones ) ); ?>
 			</script>
 		</div>
+		<?php echo sayid_render_prompt_game(); // phpcs:ignore ?>
 	</section>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * «پرامپت‌نویس» — a small simulated game (no AI API, no network): the visitor
+ * starts from a deliberately bad "AI output" and sharpens the prompt with
+ * chips; every choice appends a phrase to the prompt and restyles the live
+ * preview through CSS custom properties (see signature-prompt.js). The point
+ * it makes: AI is a tool, the designer's eye decides.
+ */
+function sayid_render_prompt_game() {
+	$groups = array(
+		'color'  => array(
+			'label'   => 'رنگ',
+			'options' => array(
+				'warm'    => array( 'گرم و آرام', 'پالت رنگی گرم و آرام' ),
+				'bold'    => array( 'تیره و جسور', 'پس‌زمینه‌ی تیره با رنگ تأکید جسور' ),
+				'natural' => array( 'طبیعی', 'رنگ‌های طبیعی و سبز ملایم' ),
+			),
+		),
+		'space'  => array(
+			'label'   => 'فاصله',
+			'options' => array(
+				'tight' => array( 'فشرده', 'فاصله‌ی داخلی فشرده' ),
+				'airy'  => array( 'نفس‌دار', 'فاصله‌ی داخلی نفس‌دار' ),
+				'wide'  => array( 'پهن', 'فاصله‌ی داخلی خیلی گشاد' ),
+			),
+		),
+		'feel'   => array(
+			'label'   => 'حس',
+			'options' => array(
+				'kind'    => array( 'مهربان', 'حس مهربان و دوستانه' ),
+				'serious' => array( 'جدی', 'حس جدی و حرفه‌ای' ),
+				'playful' => array( 'بازیگوش', 'حس بازیگوش و شاد' ),
+			),
+		),
+		'ref'    => array(
+			'label'   => 'مرجع',
+			'options' => array(
+				'minimal' => array( 'مینیمال', 'در سبک مینیمال' ),
+				'soft'    => array( 'نرم', 'با سایه‌ی نرم و عمق ملایم' ),
+				'loud'    => array( 'پررنگ', 'با سایه‌ی سخت و حس پوستر' ),
+			),
+		),
+	);
+
+	ob_start();
+	?>
+	<div class="site-container prompt-game" data-prompt-game>
+		<div class="prompt-game__head">
+			<p class="signature__eyebrow"><?php esc_html_e( 'مینی‌بازی', 'sayid' ); ?></p>
+			<h3 class="prompt-game__title"><?php esc_html_e( 'پرامپت‌نویس', 'sayid' ); ?></h3>
+			<p class="prompt-game__lead"><?php esc_html_e( 'هوش مصنوعی اولین جواب رو سریع می‌ده، ولی معمولاً بد. با چند انتخاب پرامپت رو دقیق کن و ببین خروجی چطور عوض می‌شه.', 'sayid' ); ?></p>
+		</div>
+
+		<div class="prompt-game__stage">
+			<div class="prompt-game__controls">
+				<?php foreach ( $groups as $gkey => $group ) : ?>
+					<div class="prompt-game__group" role="group" aria-label="<?php echo esc_attr( $group['label'] ); ?>">
+						<span class="prompt-game__group-label"><?php echo esc_html( $group['label'] ); ?></span>
+						<?php foreach ( $group['options'] as $okey => $opt ) : ?>
+							<button type="button" class="signature-venn__chip" data-pg-group="<?php echo esc_attr( $gkey ); ?>" data-pg-value="<?php echo esc_attr( $okey ); ?>" data-pg-phrase="<?php echo esc_attr( $opt[1] ); ?>" aria-pressed="false">
+								<?php echo esc_html( $opt[0] ); ?>
+							</button>
+						<?php endforeach; ?>
+					</div>
+				<?php endforeach; ?>
+				<button type="button" class="prompt-game__reset" data-pg-reset><?php esc_html_e( 'از اول', 'sayid' ); ?></button>
+			</div>
+
+			<div class="prompt-game__output">
+				<p class="prompt-game__prompt" data-pg-prompt aria-live="polite" data-base="<?php echo esc_attr__( 'یه اپ یادآور آب بساز', 'sayid' ); ?>"></p>
+				<div class="pg-preview" data-pg-preview aria-hidden="true">
+					<div class="pg-preview__card">
+						<strong class="pg-preview__title"><?php esc_html_e( 'یادآور آب', 'sayid' ); ?></strong>
+						<span class="pg-preview__text"><?php esc_html_e( 'امروز دو لیوان دیگه مونده.', 'sayid' ); ?></span>
+						<span class="pg-preview__button"><?php esc_html_e( 'یادم بنداز', 'sayid' ); ?></span>
+					</div>
+				</div>
+				<div class="prompt-game__meter" aria-hidden="true"><span data-pg-bar></span></div>
+				<p class="prompt-game__verdict" data-pg-verdict aria-live="polite"></p>
+			</div>
+		</div>
+	</div>
 	<?php
 	return ob_get_clean();
 }

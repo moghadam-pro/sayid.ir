@@ -492,6 +492,172 @@
   }
 }
 
+/* ---------- پرامپت‌نویس (prompt game) ----------
+   Lives under the Venn inside the signature section, so it reuses that
+   section's tokens. The preview is self-contained: every visual value is a
+   --pg-* custom property set by signature-prompt.js, with deliberately
+   ugly defaults as the "raw AI output" starting point. */
+
+.prompt-game {
+  margin-top: var(--space-24);
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--signature-line);
+}
+
+.prompt-game__title {
+  font-size: var(--text-h2, var(--text-h3));
+}
+
+.prompt-game__lead {
+  margin-top: var(--space-3);
+  max-width: 56ch;
+  color: var(--signature-text-muted);
+}
+
+.prompt-game__stage {
+  margin-top: var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.prompt-game__controls {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.prompt-game__group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.prompt-game__group-label {
+  min-width: 4.5em;
+  font-size: var(--text-small);
+  color: var(--signature-text-muted);
+}
+
+.prompt-game__reset {
+  justify-self: start;
+  font-size: var(--text-small);
+  color: var(--signature-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.prompt-game__prompt {
+  padding: var(--space-3) var(--space-4);
+  border: 1px dashed var(--signature-line);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-small);
+  color: var(--signature-text-muted);
+  min-height: 3.5em;
+}
+
+.pg-preview {
+  --pg-bg: #dcdcdc;
+  --pg-text: #000;
+  --pg-accent: #0000ee;
+  --pg-accent-text: #fff;
+  --pg-pad: 6px;
+  --pg-gap: 2px;
+  --pg-radius: 0;
+  --pg-weight: 700;
+  --pg-tilt: 0deg;
+  --pg-shadow: none;
+  --pg-border: 2px solid #000;
+
+  margin-top: var(--space-4);
+  padding: var(--space-8) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--signature-surface);
+  display: grid;
+  place-items: center;
+}
+
+.pg-preview__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pg-gap);
+  padding: var(--pg-pad);
+  background: var(--pg-bg);
+  color: var(--pg-text);
+  border: var(--pg-border);
+  border-radius: var(--pg-radius);
+  box-shadow: var(--pg-shadow);
+  font-weight: var(--pg-weight);
+  transform: rotate(var(--pg-tilt));
+  transition: padding var(--motion-normal) var(--ease-out), gap var(--motion-normal) var(--ease-out),
+    border-radius var(--motion-normal) var(--ease-out), background-color var(--motion-normal) var(--ease-out),
+    box-shadow var(--motion-normal) var(--ease-out), transform var(--motion-normal) var(--ease-out);
+}
+
+.pg-preview.is-bad .pg-preview__card {
+  font-family: "Times New Roman", serif;
+}
+
+.pg-preview__text {
+  font-size: var(--text-small);
+  font-weight: 400;
+}
+
+.pg-preview__button {
+  margin-top: var(--pg-gap);
+  padding: .4em 1.1em;
+  background: var(--pg-accent);
+  color: var(--pg-accent-text);
+  border-radius: calc(var(--pg-radius) * .6);
+  font-size: var(--text-small);
+  font-weight: var(--pg-weight);
+  transition: background-color var(--motion-normal) var(--ease-out), border-radius var(--motion-normal) var(--ease-out);
+}
+
+.prompt-game__meter {
+  margin-top: var(--space-4);
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--signature-line);
+  overflow: hidden;
+}
+
+.prompt-game__meter span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--color-yellow);
+  transition: width var(--motion-normal) var(--ease-out);
+}
+
+.prompt-game.is-complete .prompt-game__meter span {
+  background: var(--color-purple);
+}
+
+.prompt-game__verdict {
+  margin-top: var(--space-3);
+  min-height: 3em;
+  color: var(--signature-text);
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .prompt-game__stage {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-preview__card,
+  .pg-preview__button,
+  .prompt-game__meter span {
+    transition: none;
+  }
+}
+
 /* ======================================================================
    05 · Latest Notes
    ====================================================================== */
