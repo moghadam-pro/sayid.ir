@@ -29,6 +29,7 @@ function sayid_render_now() {
 					<?php if ( $now['statement'] ) : ?>
 						<p class="now__statement"><?php echo esc_html( $now['statement'] ); ?></p>
 					<?php endif; ?>
+					<?php echo sayid_render_now_media( $now['media_url'] ); // phpcs:ignore ?>
 					<?php if ( $now['link_url'] && $now['link_label'] ) : ?>
 						<a class="now__link" href="<?php echo esc_url( $now['link_url'] ); ?>">
 							<?php echo esc_html( $now['link_label'] ); ?>

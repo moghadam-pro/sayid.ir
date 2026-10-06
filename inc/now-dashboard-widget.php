@@ -40,6 +40,7 @@ function sayid_get_now() {
 		'learning'        => '',
 		'link_label'      => '',
 		'link_url'        => '',
+		'media_url'       => '',
 		'updated_at'      => 0,
 	);
 	$now = wp_parse_args( get_option( SAYID_NOW_OPTION, array() ), $defaults );
@@ -50,6 +51,12 @@ function sayid_get_now() {
 	}
 	return $now;
 }
+
+add_action( 'admin_enqueue_scripts', function ( $hook ) {
+	if ( 'index.php' === $hook && current_user_can( 'manage_options' ) ) {
+		wp_enqueue_media();
+	}
+} );
 
 add_action( 'wp_dashboard_setup', function () {
 	if ( ! current_user_can( 'manage_options' ) ) {
@@ -98,6 +105,29 @@ function sayid_render_now_dashboard_widget() {
 			<input type="text" name="link_label" placeholder="<?php esc_attr_e( 'عنوان لینک (اختیاری)', 'sayid' ); ?>" value="<?php echo esc_attr( $now['link_label'] ); ?>" style="flex:1">
 			<input type="url" name="link_url" placeholder="https://" value="<?php echo esc_attr( $now['link_url'] ); ?>" style="flex:1">
 		</p>
+		<p>
+			<label for="sayid_now_media_url"><strong><?php esc_html_e( 'مدیا (عکس، ویدیو یا لینک ویدیو)', 'sayid' ); ?></strong></label>
+			<span style="display:flex; gap:8px; margin-top:4px;">
+				<input type="url" name="media_url" id="sayid_now_media_url" placeholder="https:// — <?php esc_attr_e( 'لینک یوتیوب، ویمیو، آپارات یا فایل', 'sayid' ); ?>" value="<?php echo esc_attr( $now['media_url'] ); ?>" style="flex:1">
+				<button type="button" class="button" id="sayid_now_media_pick"><?php esc_html_e( 'انتخاب از کتابخانه', 'sayid' ); ?></button>
+			</span>
+		</p>
+		<script>
+		(function () {
+			var btn = document.getElementById('sayid_now_media_pick');
+			if (!btn || !window.wp || !wp.media) { return; }
+			var frame;
+			btn.addEventListener('click', function () {
+				if (!frame) {
+					frame = wp.media({ multiple: false, library: { type: ['image', 'video'] } });
+					frame.on('select', function () {
+						document.getElementById('sayid_now_media_url').value = frame.state().get('selection').first().toJSON().url;
+					});
+				}
+				frame.open();
+			});
+		})();
+		</script>
 		<p class="description">
 			<?php
 			echo $now['updated_at']
@@ -119,6 +149,7 @@ add_action( 'admin_post_sayid_save_now', function () {
 		'statement'  => sanitize_textarea_field( wp_unslash( $_POST['statement'] ?? '' ) ),
 		'link_label' => sanitize_text_field( wp_unslash( $_POST['link_label'] ?? '' ) ),
 		'link_url'   => esc_url_raw( wp_unslash( $_POST['link_url'] ?? '' ) ),
+		'media_url'  => esc_url_raw( wp_unslash( $_POST['media_url'] ?? '' ) ),
 		'updated_at' => time(),
 	);
 	foreach ( array_keys( sayid_now_default_labels() ) as $key ) {
@@ -131,3 +162,26 @@ add_action( 'admin_post_sayid_save_now', function () {
 	wp_safe_redirect( add_query_arg( 'sayid_now_updated', '1', admin_url( 'index.php' ) ) );
 	exit;
 } );
+
+/**
+ * Render the Now media block: image, self-hosted video, an oEmbed provider
+ * (YouTube, Vimeo…), or — for anything else (e.g. Aparat) — a plain iframe-less
+ * link so nothing breaks.
+ */
+function sayid_render_now_media( $url ) {
+	if ( ! $url ) {
+		return '';
+	}
+	$path = strtolower( (string) wp_parse_url( $url, PHP_URL_PATH ) );
+	if ( preg_match( '/\.(jpe?g|png|gif|webp|avif|svg)$/', $path ) ) {
+		return '<div class="now__media"><img src="' . esc_url( $url ) . '" alt="" loading="lazy"></div>';
+	}
+	if ( preg_match( '/\.(mp4|webm|ogv|mov|m4v)$/', $path ) ) {
+		return '<div class="now__media"><video src="' . esc_url( $url ) . '" controls playsinline preload="metadata"></video></div>';
+	}
+	$embed = wp_oembed_get( $url, array( 'width' => 640 ) );
+	if ( $embed ) {
+		return '<div class="now__media now__media--embed">' . $embed . '</div>';
+	}
+	return '<a class="now__link" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html__( 'مشاهده ویدیو', 'sayid' ) . '</a>';
+}

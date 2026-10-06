@@ -87,6 +87,32 @@
   font-weight: 500;
 }
 
+.now__media {
+  margin-top: var(--space-6);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-subtle);
+  max-width: 32rem;
+}
+
+.now__media img,
+.now__media video,
+.now__media iframe {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+}
+
+.now__media--embed {
+  aspect-ratio: 16 / 9;
+}
+
+.now__media--embed iframe {
+  height: 100%;
+}
+
 .now__updated {
   margin-top: var(--space-12);
   font-size: var(--text-small);
@@ -237,11 +263,6 @@
   .section--lab .lab-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-}
-
-.section--lab .lab-card__body {
-  padding: var(--space-5);
-  gap: var(--space-2);
 }
 
 .section--lab .lab-card__title {
